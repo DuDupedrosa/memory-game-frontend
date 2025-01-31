@@ -1,0 +1,3 @@
+1 - criar cenário de vitória e derrota
+2 - após criar o cenário de vitória / derrota => fazer a lógica para jogar novamente
+3 - mostrar salas recentes na hr de entrar em uma sala / criar sala ( card )\

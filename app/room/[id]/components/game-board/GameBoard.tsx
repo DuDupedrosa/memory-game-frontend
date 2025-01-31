@@ -117,7 +117,7 @@ export default function GameBoard({ id }: { id: number | null }) {
     return array;
   }
 
-  async function handleFlipCard(image: CardImage) {
+  async function handleFlipCard(index: number) {
     try {
       const { data } = await apiService.get(
         `room/${roomData?.id}/player-allowed-to-play`
@@ -126,6 +126,7 @@ export default function GameBoard({ id }: { id: number | null }) {
       // se não for o player atual, ele é expectador.
       if (!data.content.playerIsAllowed) return;
       if (flippedImages.length === 2) return;
+      const image = images[index];
       const imageFlipped = flippedImages.find((img) => img.id === image.id);
 
       // previnir o click na imagem aberta
@@ -162,11 +163,20 @@ export default function GameBoard({ id }: { id: number | null }) {
 
   function handleChangedPlayerTurn(playerId: string) {
     try {
-      const user = localStorage.getItem("user");
+      const user = getUserLocal();
       if (!user) return;
-      const parsedUser = JSON.parse(user);
 
-      setIsPlayerTurn(playerId === parsedUser.id);
+      setIsPlayerTurn(playerId === user.id);
+
+      setTimeout(() => {
+        const payload = images.map((image) => {
+          if (image.isFlipped) image.isFlipped = false;
+
+          return image;
+        });
+
+        setImages(payload);
+      }, 1000);
     } catch (err) {}
   }
 
@@ -259,6 +269,7 @@ export default function GameBoard({ id }: { id: number | null }) {
         flippedImages[0].key === flippedImages[1].key &&
         !flippedImages[0].isMatched &&
         !flippedImages[1].isMatched;
+
       if (matchPoint) {
         const user = getUserLocal();
         if (!user) return;
@@ -282,36 +293,15 @@ export default function GameBoard({ id }: { id: number | null }) {
           });
         }
       } else {
-        // se forem imagem diferente, ignora o if e só esvazia a array
-        // voltando as imagens diferentes que foram abertas
-
-        setTimeout(() => {
-          const payload = images.map((image) => {
-            if (image.isFlipped) image.isFlipped = false;
-
-            return image;
-          });
-
-          setImages(payload);
-        }, 2000);
-      }
-
-      // fazer o sistema de pontos + emitir o evento para o próximo jogador jogar e controlar vitoria e derrota.
-
-      if (!matchPoint) {
         socket.emit("requestChangePlayerTurn", {
           roomId: roomData?.id,
         });
       }
 
-      // sempre reseta a array de cartas vazias
       setFlippedImages([]);
     }
   }, [flippedImages]);
 
-  // 1 bug do primeiro click não abrir a carta certa
-  // 2 alerta de vitória e de derrota
-  // 3 as vezes o dono da sala consegue jogar 2 vezes
   return (
     <div className="w-full h-full min-h-screen bg-page-primary">
       <h2 className="text-5xl text-white font-semibold text-center pt-8 mb-12">
@@ -333,7 +323,9 @@ export default function GameBoard({ id }: { id: number | null }) {
             images.map((image, i) => {
               return (
                 <div
-                  onClick={() => handleFlipCard(image)}
+                  onClick={() => {
+                    handleFlipCard(i);
+                  }}
                   key={i}
                   className="w-36 h-36 rounded-lg shadow-md bg-yellow-300 cursor-pointer"
                 >
