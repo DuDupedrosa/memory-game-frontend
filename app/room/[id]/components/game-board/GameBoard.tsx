@@ -12,6 +12,7 @@ import { RoomDataType } from "@/types/room";
 import { socket } from "@/app/socket";
 import { getUserLocal } from "@/helpers/getUserLoca";
 import { useRouter } from "next/navigation";
+import DialogWinOrLose from "./DialogWinOrLose";
 
 type CardImage = {
   id: number;
@@ -29,6 +30,10 @@ export default function GameBoard({ id }: { id: number | null }) {
   const [roundScore, setRoundScore] = useState<number>(0);
   const [enemyScore, setEnemyScore] = useState<number>(0);
   const router = useRouter();
+  const [dialogWinOrLose, setDialogWinOrLose] = useState<{
+    open: boolean;
+    win: boolean;
+  }>({ open: false, win: false });
 
   const [images, setImages] = useState<CardImage[]>([
     {
@@ -180,9 +185,35 @@ export default function GameBoard({ id }: { id: number | null }) {
     } catch (err) {}
   }
 
+  async function handleWin(winnerId: string) {
+    const user = getUserLocal();
+    if (!user) return;
+
+    // jogador ganhou
+    if (winnerId === user.id) {
+      setDialogWinOrLose({
+        open: true,
+        win: true,
+      });
+    } else {
+      //perdeu
+      setDialogWinOrLose({
+        open: true,
+        win: false,
+      });
+    }
+  }
+
   function handleMarkedPoint(playerId: string, value: number) {
     const user = getUserLocal();
     if (!user) return;
+
+    if (value === 3) {
+      socket.emit("requestGameWin", {
+        roomId: id,
+        winnerPlayerId: playerId,
+      });
+    }
 
     if (user.id === playerId) {
       setRoundScore(value);
@@ -249,16 +280,25 @@ export default function GameBoard({ id }: { id: number | null }) {
       handleMarkedPoint(data.playerId, data.value);
     };
 
+    const handleWinListener = (data: {
+      roomId: string;
+      winnerPlayerId: string;
+    }) => {
+      handleWin(data.winnerPlayerId);
+    };
+
     // Registrar os listeners
     socket.on("flippedCard", handleFlippedCardListener);
     socket.on("changedPlayerTurn", handleChangedPlayerTurnListener);
     socket.on("markedPoint", handleMarkedPointListener);
+    socket.on("gameWin", handleWinListener);
 
     // Remover os listeners ao desmontar o componente ou recriar o efeito
     return () => {
       socket.off("flippedCard", handleFlippedCardListener);
       socket.off("changedPlayerTurn", handleChangedPlayerTurnListener);
       socket.off("markedPoint", handleMarkedPointListener);
+      socket.off("gameWin", handleWinListener);
     };
   }, [socket]);
 
@@ -343,6 +383,8 @@ export default function GameBoard({ id }: { id: number | null }) {
             })}
         </div>
       )}
+
+      <DialogWinOrLose open={dialogWinOrLose.open} win={dialogWinOrLose.win} />
     </div>
   );
 }

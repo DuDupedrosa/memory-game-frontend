@@ -1,3 +1,5 @@
 1 - criar cenário de vitória e derrota
 2 - após criar o cenário de vitória / derrota => fazer a lógica para jogar novamente
 3 - mostrar salas recentes na hr de entrar em uma sala / criar sala ( card )\
+4 - validar o back, entrou na sala remove qualquer linha da tabela score relacionada a sala e ao usuário
+5 - assim que ele ganhar ou perder o back deve limpar a tabela score para o jogador e sala
