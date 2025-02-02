@@ -1,3 +1,4 @@
+import { socket } from "@/app/socket";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -6,14 +7,17 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { getUserLocal } from "@/helpers/getUserLoca";
 import { useEffect, useState } from "react";
 
 export default function DialogWinOrLose({
   open,
   win,
+  roomId,
 }: {
   open: boolean;
   win: boolean;
+  roomId: number;
 }) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
@@ -23,7 +27,16 @@ export default function DialogWinOrLose({
 
   async function handlePlayAgain() {}
 
-  async function handleExitGame() {}
+  async function handleExitGame() {
+    try {
+      const user = getUserLocal();
+      if (!user) return;
+      socket.emit("requestExitGame", {
+        roomId,
+        playerId: user.id,
+      });
+    } catch (err) {}
+  }
 
   return (
     <div>

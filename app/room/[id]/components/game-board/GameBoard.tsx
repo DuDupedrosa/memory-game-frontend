@@ -13,6 +13,7 @@ import { socket } from "@/app/socket";
 import { getUserLocal } from "@/helpers/getUserLoca";
 import { useRouter } from "next/navigation";
 import DialogWinOrLose from "./DialogWinOrLose";
+import { toast } from "sonner";
 
 type CardImage = {
   id: number;
@@ -222,6 +223,15 @@ export default function GameBoard({ id }: { id: number | null }) {
     }
   }
 
+  function handleExitGame() {
+    setDialogWinOrLose({
+      open: false,
+      win: false,
+    });
+    toast.warning("O jogador saiu da sala, entre novamente.");
+    router.replace("/room");
+  }
+
   // Recebendo a semente do backend
   //const seed = 12345; // Exemplo de número de semente recebido
   //const shuffledImages = shuffleArray(images, seed);
@@ -287,11 +297,20 @@ export default function GameBoard({ id }: { id: number | null }) {
       handleWin(data.winnerPlayerId);
     };
 
+    const handleExitGameListener = (data: {
+      roomId: string;
+      playerId: string;
+    }) => {
+      console.log("%c⧭", "color: #006dcc", "cai aqui");
+      handleExitGame();
+    };
+
     // Registrar os listeners
     socket.on("flippedCard", handleFlippedCardListener);
     socket.on("changedPlayerTurn", handleChangedPlayerTurnListener);
     socket.on("markedPoint", handleMarkedPointListener);
     socket.on("gameWin", handleWinListener);
+    socket.on("exitGame", handleExitGameListener);
 
     // Remover os listeners ao desmontar o componente ou recriar o efeito
     return () => {
@@ -299,6 +318,7 @@ export default function GameBoard({ id }: { id: number | null }) {
       socket.off("changedPlayerTurn", handleChangedPlayerTurnListener);
       socket.off("markedPoint", handleMarkedPointListener);
       socket.off("gameWin", handleWinListener);
+      socket.on("exitGame", handleExitGameListener);
     };
   }, [socket]);
 
@@ -384,7 +404,11 @@ export default function GameBoard({ id }: { id: number | null }) {
         </div>
       )}
 
-      <DialogWinOrLose open={dialogWinOrLose.open} win={dialogWinOrLose.win} />
+      <DialogWinOrLose
+        roomId={Number(id)}
+        open={dialogWinOrLose.open}
+        win={dialogWinOrLose.win}
+      />
     </div>
   );
 }

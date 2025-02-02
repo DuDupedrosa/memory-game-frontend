@@ -1,5 +1,14 @@
-1 - criar cenário de vitória e derrota
-2 - após criar o cenário de vitória / derrota => fazer a lógica para jogar novamente
-3 - mostrar salas recentes na hr de entrar em uma sala / criar sala ( card )\
-4 - validar o back, entrou na sala remove qualquer linha da tabela score relacionada a sala e ao usuário
-5 - assim que ele ganhar ou perder o back deve limpar a tabela score para o jogador e sala
+// to-do
+após criar o cenário de vitória / derrota => fazer a lógica para jogar novamente 
+mostrar salas recentes na hr de entrar em uma sala / criar sala ( card )
+quando o dono da sala ou o adversario entrar, validar se a array players tem length 2, se tiver resetar a sala!
+resolver bug do admin jogar duas vezes
+
+// in-progress
+
+// teste
+
+// done
+criar cenário de vitória e derrota 
+validar o back, entrou na sala remove qualquer linha da tabela score relacionada a sala e ao usuário 
+assim que ele ganhar ou perder o back deve limpar a tabela score para o jogador e sala 
