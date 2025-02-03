@@ -98,7 +98,12 @@ export default function page() {
         <WaitingRoomComponent id={roomId} />
       )}
 
-      {step === componentStep.GAME_BOARD && <GameBoard id={roomId} />}
+      {step === componentStep.GAME_BOARD && (
+        <GameBoard
+          id={roomId}
+          playAgain={() => setStep(componentStep.WAITING_ROOM)}
+        />
+      )}
     </div>
   );
 }

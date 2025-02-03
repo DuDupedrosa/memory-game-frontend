@@ -23,7 +23,13 @@ type CardImage = {
   image: any;
 };
 
-export default function GameBoard({ id }: { id: number | null }) {
+export default function GameBoard({
+  id,
+  playAgain,
+}: {
+  id: number | null;
+  playAgain: () => void;
+}) {
   const [roomData, setRoomData] = useState<RoomDataType | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [flippedImages, setFlippedImages] = useState<CardImage[]>([]);
@@ -186,6 +192,14 @@ export default function GameBoard({ id }: { id: number | null }) {
     } catch (err) {}
   }
 
+  function handlePlayAgai() {
+    setDialogWinOrLose({
+      open: false,
+      win: false,
+    });
+    playAgain();
+  }
+
   async function handleWin(winnerId: string) {
     const user = getUserLocal();
     if (!user) return;
@@ -301,7 +315,6 @@ export default function GameBoard({ id }: { id: number | null }) {
       roomId: string;
       playerId: string;
     }) => {
-      console.log("%c⧭", "color: #006dcc", "cai aqui");
       handleExitGame();
     };
 
@@ -318,7 +331,7 @@ export default function GameBoard({ id }: { id: number | null }) {
       socket.off("changedPlayerTurn", handleChangedPlayerTurnListener);
       socket.off("markedPoint", handleMarkedPointListener);
       socket.off("gameWin", handleWinListener);
-      socket.on("exitGame", handleExitGameListener);
+      socket.off("exitGame", handleExitGameListener);
     };
   }, [socket]);
 
@@ -349,12 +362,12 @@ export default function GameBoard({ id }: { id: number | null }) {
         if (isPlayerTurn) {
           socket.emit("requestMakePoint", {
             playerId: user.id,
-            roomId: roomData?.id,
+            roomId: id,
           });
         }
       } else {
         socket.emit("requestChangePlayerTurn", {
-          roomId: roomData?.id,
+          roomId: id,
         });
       }
 
@@ -405,6 +418,7 @@ export default function GameBoard({ id }: { id: number | null }) {
       )}
 
       <DialogWinOrLose
+        playAgain={() => handlePlayAgai()}
         roomId={Number(id)}
         open={dialogWinOrLose.open}
         win={dialogWinOrLose.win}

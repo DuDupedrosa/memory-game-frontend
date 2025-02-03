@@ -1,14 +1,14 @@
 // to-do
-após criar o cenário de vitória / derrota => fazer a lógica para jogar novamente 
 mostrar salas recentes na hr de entrar em uma sala / criar sala ( card )
-quando o dono da sala ou o adversario entrar, validar se a array players tem length 2, se tiver resetar a sala!
-resolver bug do admin jogar duas vezes
+validação para saber no waitingroom se o usuário está online na fila de espera ou não, botar um botão de estou pronto
 
 // in-progress
 
 // teste
+resolver bug do admin jogar duas vezes
 
 // done
 criar cenário de vitória e derrota 
 validar o back, entrou na sala remove qualquer linha da tabela score relacionada a sala e ao usuário 
 assim que ele ganhar ou perder o back deve limpar a tabela score para o jogador e sala 
+após criar o cenário de vitória / derrota => fazer a lógica para jogar novamente 

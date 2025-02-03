@@ -1,4 +1,5 @@
-import axios from "axios";
+import axios, { AxiosError, AxiosResponse, HttpStatusCode } from "axios";
+import { toast } from "sonner";
 
 export const apiService = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
@@ -18,30 +19,28 @@ apiService.interceptors.request.use((config) => {
   return config;
 });
 
-// apiService.interceptors.response.use(
-//   (response: AxiosResponse) => response,
-//   (error: AxiosError) => {
-//     let errStatus: number | null = null;
+apiService.interceptors.response.use(
+  (response: AxiosResponse) => response,
+  (error: AxiosError) => {
+    let errStatus: number | null = null;
 
-//     if (error.response) {
-//       errStatus = error.response.status;
-//     }
+    if (error.response) {
+      errStatus = error.response.status;
+    }
 
-//     if (errStatus) {
-//       if (errStatus === errorStatusEnum.UNAUTHORIZED) {
-//         window.localStorage.clear();
+    if (errStatus) {
+      if (errStatus === HttpStatusCode.Unauthorized) {
+        window.localStorage.clear();
 
-//         if (window.location.pathname === '/') return;
+        window.location.href = "/auth/login";
+        toast.error("Unauthorized! Required Login.");
+      }
 
-//         window.location.href = '/auth';
-//         toast.error('Não autorizado! Faça login para continuar');
-//       }
+      if (errStatus === HttpStatusCode.InternalServerError) {
+        toast.error("An unexpected error occurred. Please try again later.");
+      }
+    }
 
-//       if (errStatus === errorStatusEnum.INTERNAL_SERVER_ERROR) {
-//         toast.error('Um erro aconteceu, peça ajuda para o suporte.');
-//       }
-//     }
-
-//     return Promise.reject(error);
-//   }
-// );
+    return Promise.reject(error);
+  }
+);

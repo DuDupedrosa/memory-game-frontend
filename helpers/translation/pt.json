@@ -1,0 +1,9 @@
+{
+  "invalid_password": "Senha incorreta. Tente novamente.",
+  "not_found_user_by_email": "Nenhuma conta encontrada com este e-mail.",
+  "default_erro_message": "Ocorreu um erro inesperado. Por favor, tente novamente mais tarde.",
+  "already_register_email": "Este e-mail já está cadastrado. Tente outro ou faça login.",
+  "already_register_nickName": "Este nome de jogador já está em uso. Escolha outro.",
+  "required_field": "Required field",
+  "invalid_format_email": "Invalid e-mail"
+}

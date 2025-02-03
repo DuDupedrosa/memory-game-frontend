@@ -8,24 +8,26 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { getUserLocal } from "@/helpers/getUserLoca";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function DialogWinOrLose({
   open,
   win,
   roomId,
+  playAgain,
 }: {
   open: boolean;
   win: boolean;
   roomId: number;
+  playAgain: () => void;
 }) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const router = useRouter();
 
   useEffect(() => {
     setIsOpen(open);
   }, [open]);
-
-  async function handlePlayAgain() {}
 
   async function handleExitGame() {
     try {
@@ -54,7 +56,7 @@ export default function DialogWinOrLose({
           </DialogHeader>
 
           <div className="flex items-center gap-5 justify-end">
-            <Button onClick={() => handlePlayAgain()}>Jogar novamente</Button>
+            <Button onClick={() => playAgain()}>Jogar novamente</Button>
             <Button onClick={() => handleExitGame()} variant={"secondary"}>
               Sair do jogo
             </Button>
