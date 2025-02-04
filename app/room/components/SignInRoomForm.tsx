@@ -3,13 +3,6 @@
 import { apiService } from "@/app/apiService";
 import { Button } from "@/components/ui/button";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
   Form,
   FormControl,
   FormField,
@@ -23,29 +16,32 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { socket } from "@/app/socket";
-import { useEffect } from "react";
+import { useState } from "react";
 import { getUserLocal } from "@/helpers/getUserLoca";
+import { Eye, EyeOff, Loader2 } from "lucide-react";
+import { handleRequestApiErro } from "@/helpers/handleRequestApiErro";
+import { eyeIconStyle } from "./RoomComponent";
 
 const formSchema = z.object({
   id: z.number().min(1, { message: "Campo obrigatório" }),
   password: z.string().min(1, { message: "Campo obrigatório" }),
 });
 
-export default function SignInRoomComponent({
-  createRoom,
-}: {
-  createRoom: () => void;
-}) {
+export default function SignInRoomComponent() {
   const router = useRouter();
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      id: undefined,
       password: "",
     },
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    setLoading(true);
     try {
       const user = getUserLocal();
       if (!user) return;
@@ -65,86 +61,88 @@ export default function SignInRoomComponent({
           router.push(`/room/${id}`);
         }
       });
-      //router.push(`/room/${id}`);
     } catch (err) {
-      console.log(err);
+      handleRequestApiErro(err);
     }
+    setLoading(false);
   }
 
   return (
-    <Card className="max-w-lg">
-      <CardHeader className="">
-        <CardTitle>Entrar em uma sala</CardTitle>
-        <CardDescription>
-          Preencha o campo abaixo para entrar em uma sala
-        </CardDescription>
-      </CardHeader>
+    <div className="mt-5">
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+          <div className="flex flex-col gap-5">
+            <div>
+              <FormField
+                control={form.control}
+                name="id"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-gray-400" htmlFor="id">
+                      Room Id
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        className="border-gray-400 text-gray-50"
+                        type="number"
+                        id="id"
+                        {...field}
+                        onChange={(e) =>
+                          field.onChange(parseInt(e.target.value, 10))
+                        }
+                      />
+                    </FormControl>
 
-      <CardContent className="min-w-[420px]">
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-            <div className="flex flex-col gap-5">
-              <div>
-                <FormField
-                  control={form.control}
-                  name="id"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel htmlFor="id">Id</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="number"
-                          id="id"
-                          placeholder="id"
-                          {...field}
-                          onChange={(e) =>
-                            field.onChange(parseInt(e.target.value, 10))
-                          }
-                        />
-                      </FormControl>
-
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-              <div>
-                <FormField
-                  control={form.control}
-                  name="password"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel htmlFor="password">Senha</FormLabel>
-                      <FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <div className="relative">
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-gray-400" htmlFor="id">
+                      Password
+                    </FormLabel>
+                    <FormControl>
+                      <div className="relative w-full">
+                        {!showPassword && (
+                          <Eye
+                            onClick={() => setShowPassword(!showPassword)}
+                            className={`${eyeIconStyle}`}
+                          />
+                        )}
+                        {showPassword && (
+                          <EyeOff
+                            onClick={() => setShowPassword(!showPassword)}
+                            className={`${eyeIconStyle}`}
+                          />
+                        )}
                         <Input
                           id="password"
-                          placeholder="password"
+                          type={showPassword ? "text" : "password"}
                           {...field}
+                          className="border-gray-400 text-gray-50 pr-10"
                         />
-                      </FormControl>
+                      </div>
+                    </FormControl>
 
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
             </div>
+          </div>
 
-            <div className="mt-1 flex justify-end">
-              <span
-                onClick={() => createRoom()}
-                className="text-sm text-primary underline max-w-max cursor-pointer"
-              >
-                Criar nova sala
-              </span>
-            </div>
-
-            <Button className="mt-5" type="submit">
-              Entrar
-            </Button>
-          </form>
-        </Form>
-      </CardContent>
-    </Card>
+          <Button disabled={loading} className="mt-5 w-full" type="submit">
+            {loading && <Loader2 className="animate-spin" />}
+            Submit
+          </Button>
+        </form>
+      </Form>
+    </div>
   );
 }

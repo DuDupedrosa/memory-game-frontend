@@ -4,13 +4,6 @@ import { apiService } from "@/app/apiService";
 import { socket } from "@/app/socket";
 import { Button } from "@/components/ui/button";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
   Form,
   FormControl,
   FormField,
@@ -19,21 +12,24 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { handleRequestApiErro } from "@/helpers/handleRequestApiErro";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { eyeIconStyle } from "./RoomComponent";
+import { useState } from "react";
 
 const formSchema = z.object({
   password: z.string().min(1, { message: "Campo obrigatório" }),
 });
 
-export default function CreateRoomComponent({
-  signInRoom,
-}: {
-  signInRoom: () => void;
-}) {
+export default function CreateRoomComponent() {
   const router = useRouter();
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -42,6 +38,7 @@ export default function CreateRoomComponent({
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    setLoading(true);
     try {
       const userLocal = localStorage.getItem("user");
       if (!userLocal) return;
@@ -60,63 +57,62 @@ export default function CreateRoomComponent({
         // Redireciona o jogador para a sala recém-criada
         router.push(`/room/${data.roomId}`);
       });
-
-      //router.push(`/room/${id}`);
     } catch (err) {
-      console.log(err);
+      handleRequestApiErro(err);
     }
+    setLoading(false);
   }
 
   return (
-    <Card className="max-w-lg">
-      <CardHeader className="">
-        <CardTitle>Criar sala</CardTitle>
-        <CardDescription>
-          Preencha o campo abaixo para criar uma sala
-        </CardDescription>
-      </CardHeader>
-
-      <CardContent className="min-w-[420px]">
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-            <div className="flex flex-col gap-5">
-              <div>
-                <FormField
-                  control={form.control}
-                  name="password"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel htmlFor="password">Senha</FormLabel>
-                      <FormControl>
+    <div className="mt-5">
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+          <div className="flex flex-col gap-5">
+            <div className="relative">
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-gray-400" htmlFor="id">
+                      Password
+                    </FormLabel>
+                    <FormControl>
+                      <div className="relative w-full">
+                        {!showPassword && (
+                          <Eye
+                            onClick={() => setShowPassword(!showPassword)}
+                            className={`${eyeIconStyle}`}
+                          />
+                        )}
+                        {showPassword && (
+                          <EyeOff
+                            onClick={() => setShowPassword(!showPassword)}
+                            className={`${eyeIconStyle}`}
+                          />
+                        )}
                         <Input
                           id="password"
-                          placeholder="password"
+                          type={showPassword ? "text" : "password"}
                           {...field}
+                          className="border-gray-400 text-gray-50 pr-10"
                         />
-                      </FormControl>
+                      </div>
+                    </FormControl>
 
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
             </div>
+          </div>
 
-            <div className="mt-1 flex justify-end">
-              <span
-                onClick={() => signInRoom()}
-                className="text-sm text-primary underline max-w-max cursor-pointer"
-              >
-                Entrar em uma sala
-              </span>
-            </div>
-
-            <Button className="mt-5" type="submit">
-              Criar
-            </Button>
-          </form>
-        </Form>
-      </CardContent>
-    </Card>
+          <Button disabled={loading} className="mt-5 w-full" type="submit">
+            {loading && <Loader2 className="animate-spin" />}
+            Submit
+          </Button>
+        </form>
+      </Form>
+    </div>
   );
 }
