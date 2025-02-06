@@ -18,6 +18,7 @@ import { FaCopy } from "react-icons/fa6";
 import { FaInfoCircle } from "react-icons/fa";
 import { toast } from "sonner";
 import { getUserLocal } from "@/helpers/getUserLoca";
+import DialogConfirmExitRoom from "./DialogConfirmExitRoom";
 
 export default function WaitingRoomComponent({ id }: { id: number | null }) {
   const [loadingRoomUsers, setLoadingRoomUsers] = useState<boolean>(false);
@@ -27,6 +28,7 @@ export default function WaitingRoomComponent({ id }: { id: number | null }) {
   const [playerTwoIsReady, setPlayerTwoIsReady] = useState<boolean>(false);
   const [startGameLoading, setStartGameLoading] = useState<boolean>(false);
   const [readyToPlayLoading, setReadyToPlayLoading] = useState<boolean>(false);
+  const [dialogExitRoom, setDialogExitRoom] = useState<boolean>(false);
 
   function handleCopyRoomNumber(room: number) {
     navigator.clipboard
@@ -263,8 +265,22 @@ export default function WaitingRoomComponent({ id }: { id: number | null }) {
                 </Button>
               )}
             </div>
+
+            <div>
+              <Button
+                onClick={() => setDialogExitRoom(true)}
+                className="w-full transition-all hover:bg-red-600 hover:text-gray-50 mt-5 bg-transparent border border-red-600 text-red-600"
+              >
+                Exit room
+              </Button>
+            </div>
           </CardContent>
         </Card>
+
+        <DialogConfirmExitRoom
+          open={dialogExitRoom}
+          onClose={() => setDialogExitRoom(false)}
+        />
       </div>
     </div>
   );

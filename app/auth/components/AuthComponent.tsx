@@ -8,6 +8,8 @@ import {
 } from "@/components/ui/card";
 import RegisterForm from "./RegisterForm";
 import LoginForm from "./LoginForm";
+import Image from "next/image";
+import Logo from "@/assets/icons/memory-game-logo.svg";
 
 const componentStep = {
   SIGN_IN: 1,
@@ -29,6 +31,13 @@ export default function AuthComponent() {
           <Card className="h-full min-h-[95vh] lg:min-h-[98vh] w-full px-5 md:px-12 flex flex-col justify-center">
             <div>
               <CardHeader className="">
+                <div className="ml-auto mr-auto mb-8">
+                  <Image
+                    src={Logo}
+                    className="md:w-40 md:h-40 w-36 h-36 rounded"
+                    alt="memory-game-log"
+                  />
+                </div>
                 <CardTitle className="text-3xl text-gray-900 font-semibold text-center mb-1">
                   {step === componentStep.SIGN_IN
                     ? "Welcome back!"

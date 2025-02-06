@@ -12,6 +12,8 @@ import { useState } from "react";
 import CreateRoomComponent from "./CreateRoomForm";
 import SignInRoomComponent from "./SignInRoomForm";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import Image from "next/image";
+import Logo from "@/assets/icons/memory-game-logo.svg";
 
 const steps = {
   SELECT_OPTION: 1,
@@ -30,6 +32,13 @@ export default function RoomComponent() {
       <div className="min-h-screen flex flex-col justify-center items-center px-5 md:px-0">
         <Card className="w-full md:w-1/2 xl:w-[30%] min-h-[50vh] bg-gray-800 border-purple-800 shadow-none">
           <CardHeader className="">
+            <div className="ml-auto mr-auto mb-5">
+              <Image
+                src={Logo}
+                className="w-28 h-28 rounded"
+                alt="memory-game-log"
+              />
+            </div>
             <CardTitle className="text-gray-50 text-2xl md:text-3xl font-semibold text-center mb-1">
               Welcome to memory game
             </CardTitle>

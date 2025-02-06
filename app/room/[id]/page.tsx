@@ -7,6 +7,7 @@ import { socket } from "@/app/socket";
 import GameBoard from "./components/game-board/GameBoard";
 import { getUserLocal } from "@/helpers/getUserLoca";
 import MainHeader from "@/components/MainHeader";
+import { toast } from "sonner";
 
 const componentStep = {
   WAITING_ROOM: 1,
@@ -77,6 +78,9 @@ export default function page() {
     };
 
     const handleLoggedOut = (data: { roomId: string; playerId: string }) => {
+      toast.warning(
+        "O seu oponente saiu ou foi desconectado da sala, por favor, entre novamente"
+      );
       router.replace("/room");
     };
 
@@ -95,7 +99,7 @@ export default function page() {
 
   return (
     <div>
-      <MainHeader />
+      <MainHeader showLogo={true} />
       {step === componentStep.WAITING_ROOM && (
         <WaitingRoomComponent id={roomId} />
       )}

@@ -10,18 +10,35 @@ import { useEffect, useState } from "react";
 import { getUserLocal } from "@/helpers/getUserLoca";
 import { Loader2 } from "lucide-react";
 import { MdLogout } from "react-icons/md";
-import { useRouter } from "next/navigation";
+import { useParams, usePathname, useRouter } from "next/navigation";
 import { toast } from "sonner";
+import Image from "next/image";
+import Logo from "@/assets/icons/memory-game-logo.svg";
+import { socket } from "@/app/socket";
 
-export default function MainHeader() {
+export default function MainHeader({ showLogo }: { showLogo?: boolean }) {
   const router = useRouter();
   const [nickName, setNickName] = useState<string>("");
   const [avatar, setAvatar] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
+  const pathname = usePathname();
+  const { id } = useParams();
 
   function handleLogout() {
+    if (pathname.includes("/room/")) {
+      const user = getUserLocal();
+
+      if (user && id) {
+        socket.emit("requestUserLoggedOut", {
+          playerId: user.id,
+          roomId: Number(id),
+        });
+      }
+    }
+
     localStorage.clear();
     router.push("/auth");
+
     toast.info("Você foi desconectado. Faça login novamente.", {
       duration: 3000,
     });
@@ -40,7 +57,15 @@ export default function MainHeader() {
   return (
     <div className="w-full h-24 bg-gray-800 border-b-solid border-b-2 border-b-purple-800">
       <div className="flex items-center justify-between h-full px-5">
-        <div className="text-2xl text-gray-50 font-medium">LOGO</div>
+        {showLogo && (
+          <div>
+            <Image
+              className="w-20 h-20 rounded"
+              alt="memory-game-logo"
+              src={Logo}
+            />
+          </div>
+        )}
 
         <div>
           <Popover>
