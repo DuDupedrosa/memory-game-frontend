@@ -14,6 +14,9 @@ import { getUserLocal } from "@/helpers/getUserLoca";
 import { useRouter } from "next/navigation";
 import DialogWinOrLose from "./DialogWinOrLose";
 import { toast } from "sonner";
+import AstronautaSvg from "@/assets/icons/astronauta.svg";
+import AlienSvg from "@/assets/icons/alien.svg";
+import Confetti from "react-confetti";
 
 type CardImage = {
   id: number;
@@ -376,53 +379,87 @@ export default function GameBoard({
   }, [flippedImages]);
 
   return (
-    <div className="w-full h-full min-h-screen bg-page-primary">
-      <h2 className="text-5xl text-white font-semibold text-center pt-8 mb-12">
-        Memory game
-      </h2>
-      <span className="block text-3xl">
-        {isPlayerTurn ? "Sua vez de jogar" : "Aguarde sua vez"}
-      </span>
-      <span className="text-lg font-bold block mb-2">
-        Meus pontos: {roundScore}
-      </span>
-      <span className="text-lg font-bold block">
-        Pontos do adversário: {enemyScore}
-      </span>
-      {!loading && (
-        <div className="grid grid-cols-[1fr_1fr_1fr_1fr] gap-5 max-w-max mx-auto">
-          {images &&
-            images.length > 0 &&
-            images.map((image, i) => {
-              return (
-                <div
-                  onClick={() => {
-                    handleFlipCard(i);
-                  }}
-                  key={i}
-                  className="w-36 h-36 rounded-lg shadow-md bg-yellow-300 cursor-pointer"
-                >
-                  <Image
-                    className={`w-36 h-36 rounded-lg ${
-                      image.isFlipped || image.isMatched
-                        ? "opacity-100"
-                        : "opacity-0"
-                    }`}
-                    src={image.image}
-                    alt={"Memory game image"}
-                  />
-                </div>
-              );
-            })}
-        </div>
-      )}
+    <div className="flex flex-col min-h-screen h-full bg-gray-900">
+      {dialogWinOrLose.open && dialogWinOrLose.win && <Confetti />}
+      <div className="pb-12">
+        {/* card inicial com placar e dem que é a vez */}
+        <div className="w-64 mx-auto mb-12 mt-5 p-4 bg-purple-900 text-purple-300 border-4 border-purple-500 rounded-lg shadow-lg text-center">
+          <h2 className="text-lg font-bold mb-2">Placar</h2>
+          <div className="flex justify-between">
+            <div className="flex-1 flex flex-col items-center">
+              <span className="font-mono text-sm">(You)</span>
+              <span className="block text-2xl font-mono">
+                <Image className="w-7" alt="astronauta" src={AstronautaSvg} />
+              </span>
+              <span className="text-2xl font-mono">{roundScore}</span>
+            </div>
+            <span className="text-purple-400 font-bold text-2xl font-mono">
+              VS
+            </span>
+            <div className="flex-1 flex flex-col items-center">
+              <span className="font-mono text-sm">(Enemy)</span>
+              <span className="block">
+                <Image alt="alien" className="w-7" src={AlienSvg} />
+              </span>
+              <span className="text-2xl font-mono">{enemyScore}</span>
+            </div>
+          </div>
 
-      <DialogWinOrLose
-        playAgain={() => handlePlayAgai()}
-        roomId={Number(id)}
-        open={dialogWinOrLose.open}
-        win={dialogWinOrLose.win}
-      />
+          {/* Mensagem de turno */}
+          <div className="mt-4 py-1 md:py-2 px-2 md:px-4 bg-purple-700 text-white rounded-lg shadow-md">
+            <span className="block text-lg md:text-2xl font-bold">
+              {isPlayerTurn ? "Sua vez de jogar" : "Aguarde sua vez"}
+            </span>
+          </div>
+        </div>
+
+        {!loading && (
+          <div className="grid grid-cols-3 md:grid-cols-4 gap-5 max-w-max mx-auto">
+            {images &&
+              images.length > 0 &&
+              images.map((image, i) => {
+                return (
+                  <div
+                    onClick={() => handleFlipCard(i)}
+                    key={i}
+                    className="relative w-24 h-24 md:w-36 md:h-36 rounded-lg cursor-pointer shadow-lg"
+                  >
+                    {/* Parte de trás da carta */}
+                    <div
+                      className={`absolute inset-0 bg-blue-500 rounded-lg flex items-center justify-center text-white text-2xl font-bold ${
+                        image.isFlipped || image.isMatched ? "hidden" : ""
+                      }`}
+                    >
+                      ?
+                    </div>
+
+                    {/* Parte da frente da carta */}
+                    <div
+                      className={`absolute inset-0 rounded-lg bg-purple-900 ${
+                        image.isFlipped || image.isMatched
+                          ? "opacity-100"
+                          : "opacity-0"
+                      } transition-opacity duration-300 ease-in-out`}
+                    >
+                      <Image
+                        className="w-full h-full object-cover rounded-lg"
+                        src={image.image}
+                        alt="Memory game image"
+                      />
+                    </div>
+                  </div>
+                );
+              })}
+          </div>
+        )}
+
+        <DialogWinOrLose
+          playAgain={() => handlePlayAgai()}
+          roomId={Number(id)}
+          open={dialogWinOrLose.open}
+          win={dialogWinOrLose.win}
+        />
+      </div>
     </div>
   );
 }
