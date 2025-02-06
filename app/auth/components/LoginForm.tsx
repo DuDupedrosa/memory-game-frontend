@@ -15,11 +15,12 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { apiService } from "@/app/apiService";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { handleRequestApiErro } from "@/helpers/handleRequestApiErro";
 import { callActionNav, eyeIconStyle } from "./AuthComponent";
 import ptJson from "@/helpers/translation/pt.json";
+import { toast } from "sonner";
 
 const formSchema = z.object({
   email: z
@@ -60,6 +61,15 @@ export default function LoginForm({
     }
     setLoading(false);
   }
+
+  useEffect(() => {
+    const unauthorized = localStorage.getItem("unauthorized");
+
+    if (unauthorized && unauthorized === "true") {
+      toast.error("Unauthorized! Required Login.");
+      window.localStorage.removeItem("unauthorized");
+    }
+  }, []);
 
   return (
     <div>

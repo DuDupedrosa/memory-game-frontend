@@ -6,11 +6,12 @@ export function handleRequestApiErro(err: any) {
   if (err instanceof AxiosError) {
     const errorMessage = err.response?.data?.message as keyof typeof ptJson;
 
-    if (err.status !== HttpStatusCode.InternalServerError) {
+    if (
+      err.status !== HttpStatusCode.InternalServerError &&
+      err.status !== HttpStatusCode.Unauthorized
+    ) {
       if (errorMessage && ptJson[errorMessage]) {
         toast.error(ptJson[errorMessage]);
-      } else {
-        toast.error(ptJson.default_erro_message);
       }
     }
   }

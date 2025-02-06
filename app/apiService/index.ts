@@ -30,10 +30,10 @@ apiService.interceptors.response.use(
 
     if (errStatus) {
       if (errStatus === HttpStatusCode.Unauthorized) {
+        //toast.error("Unauthorized! Required Login.");
         window.localStorage.clear();
-
-        window.location.href = "/auth/login";
-        toast.error("Unauthorized! Required Login.");
+        window.location.href = "/auth";
+        window.localStorage.setItem("unauthorized", "true");
       }
 
       if (errStatus === HttpStatusCode.InternalServerError) {

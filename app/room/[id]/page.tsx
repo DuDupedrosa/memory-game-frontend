@@ -6,6 +6,7 @@ import WaitingRoomComponent from "./components/WaitingRoomComponent";
 import { socket } from "@/app/socket";
 import GameBoard from "./components/game-board/GameBoard";
 import { getUserLocal } from "@/helpers/getUserLoca";
+import MainHeader from "@/components/MainHeader";
 
 const componentStep = {
   WAITING_ROOM: 1,
@@ -94,6 +95,7 @@ export default function page() {
 
   return (
     <div>
+      <MainHeader />
       {step === componentStep.WAITING_ROOM && (
         <WaitingRoomComponent id={roomId} />
       )}
