@@ -117,6 +117,7 @@ export default function GameBoard({
       image: Spider,
     },
   ]);
+  const [flipCardLoading, setFlipCardLoading] = useState<boolean>(false);
 
   function seededRandom(seed: number) {
     let x = Math.sin(seed++) * 10000;
@@ -134,18 +135,30 @@ export default function GameBoard({
 
   async function handleFlipCard(index: number) {
     try {
+      if (flipCardLoading) {
+        toast.warning("Aguarde, estamos carregando sua virada de carta");
+        return;
+      }
+
       const { data } = await apiService.get(
         `room/${roomData?.id}/player-allowed-to-play`
       );
 
       // se não for o player atual, ele é expectador.
-      if (!data.content.playerIsAllowed) return;
-      if (flippedImages.length === 2) return;
+      if (!data.content.playerIsAllowed) {
+        setFlipCardLoading(false);
+        return;
+      }
+      if (flippedImages.length === 2) {
+        setFlipCardLoading(false);
+        return;
+      }
       const image = images[index];
       const imageFlipped = flippedImages.find((img) => img.id === image.id);
 
       // previnir o click na imagem aberta
       if (!image.isMatched && !imageFlipped) {
+        setFlipCardLoading(true);
         socket.emit("requestFlipCard", {
           roomId: roomData?.id,
           id: image.id,
@@ -159,7 +172,10 @@ export default function GameBoard({
       // não pode abrir mais de 2 cartas
       const image = images.find((image) => image.id === id);
 
-      if (!image) return;
+      if (!image) {
+        setFlipCardLoading(false);
+        return;
+      }
 
       // atualizando o board
       const newImages = images.map((image) => {
@@ -173,6 +189,7 @@ export default function GameBoard({
       const payload = [...flippedImages, image];
 
       setFlippedImages((prevFlippedImages) => [...prevFlippedImages, image]);
+      setFlipCardLoading(false);
     } catch (err) {}
   }
 
