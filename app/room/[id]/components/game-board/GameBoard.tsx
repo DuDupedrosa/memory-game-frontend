@@ -17,14 +17,7 @@ import { toast } from "sonner";
 import AstronautaSvg from "@/assets/icons/astronauta.svg";
 import AlienSvg from "@/assets/icons/alien.svg";
 import Confetti from "react-confetti";
-
-type CardImage = {
-  id: number;
-  key: string;
-  isFlipped: boolean;
-  isMatched: boolean;
-  image: any;
-};
+import { CardImage } from "@/types/game";
 
 export default function GameBoard({
   id,

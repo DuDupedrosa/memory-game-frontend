@@ -93,3 +93,63 @@ body {
 .shake {
   animation: shake 0.5s ease-in-out;
 }
+
+@keyframes gradientAnimation {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.bg-animated-dark {
+  background: linear-gradient(-45deg, #0d0d14, #1a1a2e, #3a0ca3, #0d0d14);
+  background-size: 400% 400%;
+  animation: gradientAnimation 8s ease-in-out infinite;
+}
+
+@keyframes moveParticles {
+  from {
+    transform: translateY(0);
+    opacity: 0.6;
+  }
+  to {
+    transform: translateY(-200px);
+    opacity: 0;
+  }
+}
+
+.particle {
+  position: absolute;
+  background: rgba(138, 43, 226, 0.4); /* Roxo neon */
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  animation: moveParticles 6s linear infinite;
+  filter: blur(2px);
+}
+
+.particle:nth-child(2) {
+  left: 15%;
+  animation-duration: 7s;
+}
+.particle:nth-child(3) {
+  left: 30%;
+  animation-duration: 9s;
+}
+.particle:nth-child(4) {
+  left: 50%;
+  animation-duration: 8s;
+}
+.particle:nth-child(5) {
+  left: 70%;
+  animation-duration: 6s;
+}
+.particle:nth-child(6) {
+  left: 90%;
+  animation-duration: 10s;
+}
