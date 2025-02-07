@@ -35,7 +35,6 @@ export default function GameBoard({
 }) {
   const [roomData, setRoomData] = useState<RoomDataType | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
-  const [flippedImages, setFlippedImages] = useState<CardImage[]>([]);
   const [isPlayerTurn, setIsPlayerTurn] = useState<boolean>(false);
   const [roundScore, setRoundScore] = useState<number>(0);
   const [enemyScore, setEnemyScore] = useState<number>(0);
@@ -149,7 +148,10 @@ export default function GameBoard({
         setFlipCardLoading(false);
         return;
       }
-      if (flippedImages.length === 2) {
+
+      const flippedImages = images.filter((image) => image.isFlipped);
+
+      if (flippedImages && flippedImages.length === 2) {
         setFlipCardLoading(false);
         return;
       }
@@ -165,6 +167,60 @@ export default function GameBoard({
         });
       }
     } catch (err) {}
+  }
+
+  function handleChangedPlayerTurn(playerId: string) {
+    try {
+      const user = getUserLocal();
+      if (!user) return;
+
+      setIsPlayerTurn(playerId === user.id);
+
+      setTimeout(() => {
+        const payload = images.map((image) => {
+          if (image.isFlipped) image.isFlipped = false;
+
+          return image;
+        });
+
+        setImages(payload);
+      }, 500);
+    } catch (err) {}
+  }
+
+  async function triggerFlipCard(flippedImages: CardImage[]) {
+    const user = getUserLocal();
+    if (!user) return;
+    // ou seja, selecionou duas imagens iguais.
+    const matchPoint =
+      flippedImages[0].key === flippedImages[1].key &&
+      !flippedImages[0].isMatched &&
+      !flippedImages[1].isMatched;
+
+    if (matchPoint) {
+      // seta para ficar aberta pra sempre
+      // emitir o evento do ponto do jogador
+      const payload = images.map((image) => {
+        if (image.key === flippedImages[0].key) {
+          image.isMatched = true;
+          image.isFlipped = false;
+        }
+
+        return image;
+      });
+
+      setImages(payload);
+
+      socket.emit("requestMakePoint", {
+        playerId: user.id,
+        roomId: id,
+      });
+    } else {
+      socket.emit("requestChangePlayerTurn", {
+        roomId: id,
+        playerId: user.id,
+      });
+    }
   }
 
   function handleFlippedCard(id: number) {
@@ -185,30 +241,13 @@ export default function GameBoard({
       });
       setImages(newImages);
 
-      // salvando as imagens que foram viradas
-      const payload = [...flippedImages, image];
+      const flippedImages = newImages.filter((image) => image.isFlipped);
 
-      setFlippedImages((prevFlippedImages) => [...prevFlippedImages, image]);
+      if (flippedImages && flippedImages.length === 2) {
+        triggerFlipCard(flippedImages);
+      }
+
       setFlipCardLoading(false);
-    } catch (err) {}
-  }
-
-  function handleChangedPlayerTurn(playerId: string) {
-    try {
-      const user = getUserLocal();
-      if (!user) return;
-
-      setIsPlayerTurn(playerId === user.id);
-
-      setTimeout(() => {
-        const payload = images.map((image) => {
-          if (image.isFlipped) image.isFlipped = false;
-
-          return image;
-        });
-
-        setImages(payload);
-      }, 1000);
     } catch (err) {}
   }
 
@@ -239,22 +278,23 @@ export default function GameBoard({
     }
   }
 
-  function handleMarkedPoint(playerId: string, value: number) {
+  function handleMarkedPoint(scores: { playerId: string; value: number }[]) {
     const user = getUserLocal();
     if (!user) return;
+    const winPlayer = scores.find((score) => score.value === 3);
 
-    if (value === 3) {
+    if (winPlayer) {
       socket.emit("requestGameWin", {
         roomId: id,
-        winnerPlayerId: playerId,
+        winnerPlayerId: winPlayer.playerId,
       });
     }
 
-    if (user.id === playerId) {
-      setRoundScore(value);
-    } else {
-      setEnemyScore(value);
-    }
+    const roundScore = scores.find((score) => score.playerId === user.id);
+    const enemyScore = scores.find((score) => score.playerId !== user.id);
+
+    setRoundScore(roundScore ? roundScore.value : 0);
+    setEnemyScore(enemyScore ? enemyScore.value : 0);
   }
 
   function handleExitGame() {
@@ -265,10 +305,6 @@ export default function GameBoard({
     toast.warning("O jogador saiu da sala, entre novamente.");
     router.replace("/room");
   }
-
-  // Recebendo a semente do backend
-  //const seed = 12345; // Exemplo de número de semente recebido
-  //const shuffledImages = shuffleArray(images, seed);
 
   useEffect(() => {
     shuffleArray(
@@ -318,10 +354,9 @@ export default function GameBoard({
 
     const handleMarkedPointListener = (data: {
       roomId: number;
-      playerId: string;
-      value: number;
+      scores: { playerId: string; value: number }[];
     }) => {
-      handleMarkedPoint(data.playerId, data.value);
+      handleMarkedPoint(data.scores);
     };
 
     const handleWinListener = (data: {
@@ -354,46 +389,6 @@ export default function GameBoard({
       socket.off("exitGame", handleExitGameListener);
     };
   }, [socket]);
-
-  useEffect(() => {
-    if (flippedImages.length === 2) {
-      // ou seja, selecionou duas imagens iguais.
-      const matchPoint =
-        flippedImages[0].key === flippedImages[1].key &&
-        !flippedImages[0].isMatched &&
-        !flippedImages[1].isMatched;
-
-      if (matchPoint) {
-        const user = getUserLocal();
-        if (!user) return;
-        // seta para ficar aberta pra sempre
-        // emitir o evento do ponto do jogador
-        const payload = images.map((image) => {
-          if (image.key === flippedImages[0].key) {
-            image.isMatched = true;
-            image.isFlipped = false;
-          }
-
-          return image;
-        });
-
-        setImages(payload);
-
-        if (isPlayerTurn) {
-          socket.emit("requestMakePoint", {
-            playerId: user.id,
-            roomId: id,
-          });
-        }
-      } else {
-        socket.emit("requestChangePlayerTurn", {
-          roomId: id,
-        });
-      }
-
-      setFlippedImages([]);
-    }
-  }, [flippedImages]);
 
   return (
     <div className="flex flex-col min-h-screen h-full bg-gray-900">
