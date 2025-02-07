@@ -17,18 +17,22 @@ import { toast } from "sonner";
 export default function DialogConfirmExitRoom({
   open,
   onClose,
+  loggedOut,
 }: {
   open: boolean;
   onClose: () => void;
+  loggedOut?: boolean;
 }) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const { id } = useParams();
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
+  const [isLoggedOut, setIsLoggedOut] = useState<boolean | undefined>(false);
 
   function handleClose() {
     onClose();
     setIsOpen(false);
+    setIsLoggedOut(false);
   }
 
   function handleExitRoom() {
@@ -41,7 +45,19 @@ export default function DialogConfirmExitRoom({
           playerId: user.id,
           roomId: Number(id),
         });
-        router.replace("/room");
+
+        // vai sair da sala + deslogar
+        if (isLoggedOut) {
+          window.localStorage.clear();
+          router.push("/auth");
+
+          toast.info("Você foi desconectado. Faça login novamente.", {
+            duration: 3000,
+          });
+        } else {
+          // ele só quer sair da sala, ai volta para a /room
+          router.replace("/room");
+        }
       } else {
         toast.error(
           "Um erro acontenceu ao sair da sala, tente novamente em alguns instantes."
@@ -55,6 +71,10 @@ export default function DialogConfirmExitRoom({
     setIsOpen(open);
   }, [open]);
 
+  useEffect(() => {
+    setIsLoggedOut(loggedOut);
+  }, [loggedOut]);
+
   return (
     <div>
       <Dialog open={isOpen}>
@@ -65,12 +85,16 @@ export default function DialogConfirmExitRoom({
                 <GoAlertFill className="text-3xl text-red-600" />
               </div>
               <span className="text-xl text-center mb-2 font-medium block text-gray-50">
-                Você tem certeza que quer sair da sala?
+                {isLoggedOut
+                  ? "Você tem certeza que quer encerrar sessão?"
+                  : "Você tem certeza que quer sair da sala?"}
               </span>
             </DialogTitle>
             <DialogDescription>
               <p className="text-base mb-5 text-gray-400 text-center font-normal">
-                tem certeza? geral vai ser desconectado da sala incluindo vc
+                {isLoggedOut
+                  ? "Você vai sair da sala e vai ser deslogado"
+                  : "tem certeza? geral vai ser desconectado da sala incluindo vc"}
               </p>
             </DialogDescription>
           </DialogHeader>
@@ -82,7 +106,7 @@ export default function DialogConfirmExitRoom({
               className="bg-red-600 transition-all hover:bg-red-800 text-green-50"
             >
               {loading && <Loader2 className="animate-spin" />}
-              Sim, sair da sala
+              Sim, confirmar
             </Button>
             <Button
               onClick={() => handleClose()}

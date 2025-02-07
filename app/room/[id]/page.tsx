@@ -99,7 +99,7 @@ export default function page() {
 
   return (
     <div>
-      <MainHeader showLogo={true} />
+      <MainHeader showLogo={true} isGameBoard={true} />
       {step === componentStep.WAITING_ROOM && (
         <WaitingRoomComponent id={roomId} />
       )}
