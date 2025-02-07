@@ -16,11 +16,12 @@ import { Button } from "@/components/ui/button";
 import { apiService } from "@/app/apiService";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Eye, EyeOff, Loader2 } from "lucide-react";
+import { Eye, EyeOff, Key, Loader2, Mail } from "lucide-react";
 import { handleRequestApiErro } from "@/helpers/handleRequestApiErro";
-import { callActionNav, eyeIconStyle } from "./AuthComponent";
+import { callActionNav } from "./AuthComponent";
 import ptJson from "@/helpers/translation/pt.json";
 import { toast } from "sonner";
+import { eyeInputIconStyle, iconInputStyle } from "@/style/input";
 
 const formSchema = z.object({
   email: z
@@ -84,7 +85,10 @@ export default function LoginForm({
                   <FormItem>
                     <FormLabel htmlFor="email">Email</FormLabel>
                     <FormControl>
-                      <Input id="email" {...field} />
+                      <div className="relative w-full">
+                        <Mail className={iconInputStyle} />
+                        <Input id="email" className="pl-10" {...field} />
+                      </div>
                     </FormControl>
 
                     <FormMessage />
@@ -104,20 +108,21 @@ export default function LoginForm({
                         {!showPassword && (
                           <Eye
                             onClick={() => setShowPassword(!showPassword)}
-                            className={`${eyeIconStyle}`}
+                            className={`${eyeInputIconStyle}`}
                           />
                         )}
                         {showPassword && (
                           <EyeOff
                             onClick={() => setShowPassword(!showPassword)}
-                            className={`${eyeIconStyle}`}
+                            className={`${eyeInputIconStyle}`}
                           />
                         )}
+                        <Key className={iconInputStyle} />
                         <Input
                           id="password"
                           type={showPassword ? "text" : "password"}
                           {...field}
-                          className="pr-10"
+                          className="pr-10 pl-10"
                         />
                       </div>
                     </FormControl>

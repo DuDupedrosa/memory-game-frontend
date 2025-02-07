@@ -18,9 +18,16 @@ import { z } from "zod";
 import { socket } from "@/app/socket";
 import { useState } from "react";
 import { getUserLocal } from "@/helpers/getUserLoca";
-import { Eye, EyeOff, Loader2 } from "lucide-react";
+import {
+  Eye,
+  EyeOff,
+  Key,
+  Loader2,
+  LockKeyholeIcon,
+  LockKeyholeOpen,
+} from "lucide-react";
 import { handleRequestApiErro } from "@/helpers/handleRequestApiErro";
-import { eyeIconStyle } from "./RoomComponent";
+import { eyeInputIconStyle, iconInputStyle } from "@/style/input";
 
 const formSchema = z.object({
   id: z.number().min(1, { message: "Campo obrigatório" }),
@@ -82,15 +89,18 @@ export default function SignInRoomComponent() {
                       Room Id
                     </FormLabel>
                     <FormControl>
-                      <Input
-                        className="border-gray-400 text-gray-50"
-                        type="number"
-                        id="id"
-                        {...field}
-                        onChange={(e) =>
-                          field.onChange(parseInt(e.target.value, 10))
-                        }
-                      />
+                      <div className="w-full relative">
+                        <LockKeyholeOpen className={iconInputStyle} />
+                        <Input
+                          className="border-gray-400 text-gray-50 pl-10"
+                          type="number"
+                          id="id"
+                          {...field}
+                          onChange={(e) =>
+                            field.onChange(parseInt(e.target.value, 10))
+                          }
+                        />
+                      </div>
                     </FormControl>
 
                     <FormMessage />
@@ -112,20 +122,21 @@ export default function SignInRoomComponent() {
                         {!showPassword && (
                           <Eye
                             onClick={() => setShowPassword(!showPassword)}
-                            className={`${eyeIconStyle}`}
+                            className={`${eyeInputIconStyle}`}
                           />
                         )}
                         {showPassword && (
                           <EyeOff
                             onClick={() => setShowPassword(!showPassword)}
-                            className={`${eyeIconStyle}`}
+                            className={`${eyeInputIconStyle}`}
                           />
                         )}
+                        <Key className={iconInputStyle} />
                         <Input
                           id="password"
                           type={showPassword ? "text" : "password"}
                           {...field}
-                          className="border-gray-400 text-gray-50 pr-10"
+                          className="border-gray-400 text-gray-50 px-10"
                         />
                       </div>
                     </FormControl>

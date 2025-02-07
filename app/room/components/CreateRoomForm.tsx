@@ -14,12 +14,12 @@ import {
 import { Input } from "@/components/ui/input";
 import { handleRequestApiErro } from "@/helpers/handleRequestApiErro";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Eye, EyeOff, Loader2 } from "lucide-react";
+import { Eye, EyeOff, Key, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { eyeIconStyle } from "./RoomComponent";
 import { useState } from "react";
+import { eyeInputIconStyle, iconInputStyle } from "@/style/input";
 
 const formSchema = z.object({
   password: z.string().min(1, { message: "Campo obrigatório" }),
@@ -82,20 +82,21 @@ export default function CreateRoomComponent() {
                         {!showPassword && (
                           <Eye
                             onClick={() => setShowPassword(!showPassword)}
-                            className={`${eyeIconStyle}`}
+                            className={`${eyeInputIconStyle}`}
                           />
                         )}
                         {showPassword && (
                           <EyeOff
                             onClick={() => setShowPassword(!showPassword)}
-                            className={`${eyeIconStyle}`}
+                            className={`${eyeInputIconStyle}`}
                           />
                         )}
+                        <Key className={iconInputStyle} />
                         <Input
                           id="password"
                           type={showPassword ? "text" : "password"}
                           {...field}
-                          className="border-gray-400 text-gray-50 pr-10"
+                          className="border-gray-400 text-gray-50 px-10"
                         />
                       </div>
                     </FormControl>

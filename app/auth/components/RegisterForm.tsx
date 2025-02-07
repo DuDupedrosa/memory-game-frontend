@@ -18,9 +18,10 @@ import { apiService } from "@/app/apiService";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { handleRequestApiErro } from "@/helpers/handleRequestApiErro";
-import { Eye, EyeOff, Loader2 } from "lucide-react";
-import { callActionNav, eyeIconStyle } from "./AuthComponent";
+import { Eye, EyeOff, Gamepad2, Key, Loader2, Mail } from "lucide-react";
+import { callActionNav } from "./AuthComponent";
 import ptJson from "@/helpers/translation/pt.json";
+import { eyeInputIconStyle, iconInputStyle } from "@/style/input";
 
 const formSchema = z.object({
   nickName: z.string().min(1, { message: ptJson.required_field }),
@@ -73,7 +74,10 @@ export default function RegisterForm({ goToLogin }: { goToLogin: () => void }) {
                   <FormItem>
                     <FormLabel htmlFor="nickName">Nickname</FormLabel>
                     <FormControl>
-                      <Input id="nickName" {...field} />
+                      <div className="relative w-full">
+                        <Gamepad2 className={iconInputStyle} />
+                        <Input id="nickName" {...field} className="pl-10" />
+                      </div>
                     </FormControl>
                     <FormDescription>
                       The name your opponents will see
@@ -91,7 +95,10 @@ export default function RegisterForm({ goToLogin }: { goToLogin: () => void }) {
                   <FormItem>
                     <FormLabel htmlFor="email">Email</FormLabel>
                     <FormControl>
-                      <Input id="email" {...field} />
+                      <div className="w-full relative">
+                        <Mail className={iconInputStyle} />
+                        <Input id="email" {...field} className="pl-10" />
+                      </div>
                     </FormControl>
 
                     <FormMessage />
@@ -111,20 +118,21 @@ export default function RegisterForm({ goToLogin }: { goToLogin: () => void }) {
                         {!showPassword && (
                           <Eye
                             onClick={() => setShowPassword(!showPassword)}
-                            className={`${eyeIconStyle}`}
+                            className={`${eyeInputIconStyle}`}
                           />
                         )}
                         {showPassword && (
                           <EyeOff
                             onClick={() => setShowPassword(!showPassword)}
-                            className={`${eyeIconStyle}`}
+                            className={`${eyeInputIconStyle}`}
                           />
                         )}
+                        <Key className={iconInputStyle} />
                         <Input
                           id="password"
                           type={showPassword ? "text" : "password"}
                           {...field}
-                          className="pr-10"
+                          className="pr-10 pl-10"
                         />
                       </div>
                     </FormControl>

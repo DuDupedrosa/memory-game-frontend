@@ -16,9 +16,6 @@ const componentStep = {
   REGISTER: 2,
 };
 
-export const eyeIconStyle =
-  "absolute cursor-pointer right-3 top-1/2 -translate-y-1/2 text-gray-500";
-
 export const callActionNav = `flex max-w-max p-1 rounded hover:bg-violet-300 cursor-pointer gap-1 text-sm text-gray-900 font-normal transition-all underline`;
 
 export default function AuthComponent() {
