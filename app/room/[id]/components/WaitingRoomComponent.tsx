@@ -12,13 +12,14 @@ import {
 } from "@/components/ui/card";
 import { RoomDataType } from "@/types/room";
 import { UserDataType } from "@/types/user";
-import { Loader2 } from "lucide-react";
+import { Loader2, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { FaCopy } from "react-icons/fa6";
 import { FaInfoCircle } from "react-icons/fa";
 import { toast } from "sonner";
 import { getUserLocal } from "@/helpers/getUserLoca";
 import DialogConfirmExitRoom from "./DialogConfirmExitRoom";
+import DialogRemoveUser from "./DialogRemoveUser";
 
 export default function WaitingRoomComponent({ id }: { id: number | null }) {
   const [loadingRoomUsers, setLoadingRoomUsers] = useState<boolean>(false);
@@ -29,7 +30,10 @@ export default function WaitingRoomComponent({ id }: { id: number | null }) {
   const [startGameLoading, setStartGameLoading] = useState<boolean>(false);
   const [readyToPlayLoading, setReadyToPlayLoading] = useState<boolean>(false);
   const [dialogExitRoom, setDialogExitRoom] = useState<boolean>(false);
-
+  const [dialogRemoverUser, setDialogRemoveUser] = useState<{
+    open: boolean;
+    nickname: string;
+  }>({ open: false, nickname: "" });
   function handleCopyRoomNumber(room: number) {
     navigator.clipboard
       .writeText(room.toString())
@@ -67,6 +71,13 @@ export default function WaitingRoomComponent({ id }: { id: number | null }) {
         roomId: id,
       });
     } catch (err) {}
+  }
+
+  function handleRemoveUser(nickname: string) {
+    setDialogRemoveUser({
+      open: true,
+      nickname,
+    });
   }
 
   useEffect(() => {
@@ -226,11 +237,19 @@ export default function WaitingRoomComponent({ id }: { id: number | null }) {
                 <ul className="flex flex-col gap-2">
                   {roomUsers.map((user, i) => {
                     return (
-                      <li key={i}>
+                      <li key={i} className="flex items-center gap-3">
                         <span className="flex text-base text-gray-400">
                           ({userLocal?.id === user.id ? "You" : "Enemy"}){" "}
                           {user.nickName}
                         </span>
+
+                        {user.id !== roomData?.ownerId &&
+                          userLocal?.id === roomData?.ownerId && (
+                            <Trash2
+                              onClick={() => handleRemoveUser(user.nickName)}
+                              className="text-red-600 w-5 transition-all hover:text-red-800 cursor-pointer"
+                            />
+                          )}
                       </li>
                     );
                   })}
@@ -280,6 +299,12 @@ export default function WaitingRoomComponent({ id }: { id: number | null }) {
         <DialogConfirmExitRoom
           open={dialogExitRoom}
           onClose={() => setDialogExitRoom(false)}
+        />
+
+        <DialogRemoveUser
+          open={dialogRemoverUser.open}
+          nickName={dialogRemoverUser.nickname}
+          onClose={() => setDialogRemoveUser({ open: false, nickname: "" })}
         />
       </div>
     </div>

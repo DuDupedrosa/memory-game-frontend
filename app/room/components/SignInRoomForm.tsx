@@ -163,7 +163,7 @@ export default function SignInRoomComponent() {
       {rooms && rooms.length > 0 && (
         <div className="mt-5">
           <span className="block text-base font-medium text-gray-50">
-            Acessos recentes:
+            Minhas salas recentes:
           </span>
 
           <ul className="flex flex-col gap-3 mt-3">
