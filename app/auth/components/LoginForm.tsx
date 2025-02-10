@@ -18,10 +18,13 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Eye, EyeOff, Key, Loader2, Mail } from "lucide-react";
 import { handleRequestApiErro } from "@/helpers/handleRequestApiErro";
-import { callActionNav } from "./AuthComponent";
+import {
+  callActionNav,
+  eyeInputIconStyle,
+  iconInputStyle,
+} from "./AuthComponent";
 import ptJson from "@/helpers/translation/pt.json";
 import { toast } from "sonner";
-import { eyeInputIconStyle, iconInputStyle } from "@/style/input";
 
 const formSchema = z.object({
   email: z

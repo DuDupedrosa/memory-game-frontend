@@ -308,7 +308,7 @@ export default function GameBoard({
 
     const fetchRoom = async (roomId: number) => {
       try {
-        const { data } = await apiService.get(`room/${roomId}`);
+        const { data } = await apiService.get(`room/data/${roomId}`);
         const user = localStorage.getItem("user");
         if (!user) return;
 

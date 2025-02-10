@@ -16,18 +16,11 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { socket } from "@/app/socket";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { getUserLocal } from "@/helpers/getUserLoca";
-import {
-  Eye,
-  EyeOff,
-  Key,
-  Loader2,
-  LockKeyholeIcon,
-  LockKeyholeOpen,
-} from "lucide-react";
+import { Eye, EyeOff, Key, Loader2, LockKeyholeOpen } from "lucide-react";
 import { handleRequestApiErro } from "@/helpers/handleRequestApiErro";
-import { eyeInputIconStyle, iconInputStyle } from "@/style/input";
+import { eyeInputIconStyle, iconInputStyle } from "./RoomComponent";
 
 const formSchema = z.object({
   id: z.number().min(1, { message: "Campo obrigatório" }),
@@ -38,6 +31,7 @@ export default function SignInRoomComponent() {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
+  const [rooms, setRooms] = useState<number[] | []>([]);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -73,6 +67,17 @@ export default function SignInRoomComponent() {
     }
     setLoading(false);
   }
+
+  useEffect(() => {
+    const fetchRoomsIds = async () => {
+      try {
+        const { data } = await apiService.get("room/owner-access-recent");
+        setRooms(data.content);
+      } catch (err) {}
+    };
+
+    fetchRoomsIds();
+  }, []);
 
   return (
     <div className="mt-5">
@@ -154,6 +159,27 @@ export default function SignInRoomComponent() {
           </Button>
         </form>
       </Form>
+
+      {rooms && rooms.length > 0 && (
+        <div className="mt-5">
+          <span className="block text-base font-medium text-gray-50">
+            Acessos recentes:
+          </span>
+
+          <ul className="flex flex-col gap-3 mt-3">
+            {rooms.map((room_id, i) => {
+              return (
+                <li key={i} className="flex items-center gap-2">
+                  <span className="w-2 h-2 bg-primary rounded-full block"></span>
+                  <span className="text-base text-gray-400 font-bold">
+                    Id: {room_id}
+                  </span>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      )}
     </div>
   );
 }

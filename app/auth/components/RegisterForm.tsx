@@ -19,9 +19,12 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { handleRequestApiErro } from "@/helpers/handleRequestApiErro";
 import { Eye, EyeOff, Gamepad2, Key, Loader2, Mail } from "lucide-react";
-import { callActionNav } from "./AuthComponent";
+import {
+  callActionNav,
+  eyeInputIconStyle,
+  iconInputStyle,
+} from "./AuthComponent";
 import ptJson from "@/helpers/translation/pt.json";
-import { eyeInputIconStyle, iconInputStyle } from "@/style/input";
 
 const formSchema = z.object({
   nickName: z.string().min(1, { message: ptJson.required_field }),

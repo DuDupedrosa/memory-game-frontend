@@ -19,7 +19,7 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useState } from "react";
-import { eyeInputIconStyle, iconInputStyle } from "@/style/input";
+import { eyeInputIconStyle, iconInputStyle } from "./RoomComponent";
 
 const formSchema = z.object({
   password: z.string().min(1, { message: "Campo obrigatório" }),
