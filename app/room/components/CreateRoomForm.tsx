@@ -20,9 +20,17 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useState } from "react";
 import { eyeInputIconStyle, iconInputStyle } from "./RoomComponent";
+import { LevelEnum } from "@/helpers/enum/levelEnum";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 const formSchema = z.object({
   password: z.string().min(1, { message: "Campo obrigatório" }),
+  level: z.enum(
+    [String(LevelEnum.EASY), String(LevelEnum.MEDIUM), String(LevelEnum.HARD)],
+    {
+      required_error: "Capo obrigatório",
+    }
+  ),
 });
 
 export default function CreateRoomComponent() {
@@ -34,6 +42,7 @@ export default function CreateRoomComponent() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       password: "",
+      level: String(LevelEnum.EASY),
     },
   });
 
@@ -43,7 +52,10 @@ export default function CreateRoomComponent() {
       const userLocal = localStorage.getItem("user");
       if (!userLocal) return;
       const user = JSON.parse(userLocal);
-      const payload = { ...values };
+      let payload = {
+        password: values.password,
+        level: Number(values.level),
+      };
       const { data } = await apiService.post("room", payload);
       const { id } = data.content;
 
@@ -68,6 +80,52 @@ export default function CreateRoomComponent() {
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <div className="flex flex-col gap-5">
+            <div>
+              <FormField
+                control={form.control}
+                name="level"
+                render={({ field }) => (
+                  <FormItem className="space-y-3">
+                    <FormLabel className="text-gray-400">
+                      Nivel de dificuldade
+                    </FormLabel>
+                    <FormControl>
+                      <RadioGroup
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                        className="flex items-center gap-5"
+                      >
+                        <FormItem className="flex items-center space-x-3 space-y-0">
+                          <FormControl>
+                            <RadioGroupItem value={String(LevelEnum.EASY)} />
+                          </FormControl>
+                          <FormLabel className="font-normal text-gray-50">
+                            Fácil
+                          </FormLabel>
+                        </FormItem>
+                        <FormItem className="flex items-center space-x-3 space-y-0">
+                          <FormControl>
+                            <RadioGroupItem value={String(LevelEnum.MEDIUM)} />
+                          </FormControl>
+                          <FormLabel className="font-normal text-gray-50">
+                            Médio
+                          </FormLabel>
+                        </FormItem>
+                        <FormItem className="flex items-center space-x-3 space-y-0">
+                          <FormControl>
+                            <RadioGroupItem value={String(LevelEnum.HARD)} />
+                          </FormControl>
+                          <FormLabel className="font-normal text-gray-50">
+                            Dificil
+                          </FormLabel>
+                        </FormItem>
+                      </RadioGroup>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
             <div className="relative">
               <FormField
                 control={form.control}

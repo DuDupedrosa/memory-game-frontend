@@ -1,90 +1,90 @@
 "use client";
 import Image from "next/image";
-import MainHeader from "../MainHeader";
-import Logo from "@/assets/icons/memory-game-logo.svg";
-import Shark from "@/assets/img/shark.jpg";
-import Crocodile from "@/assets/img/crocodile.jpg";
-import Racum from "@/assets/img/racum.jpg";
-import Spider from "@/assets/img/spider.jpg";
-import Tucano from "@/assets/img/tucano.jpg";
 import { useState } from "react";
 import { CardImage } from "@/types/game";
 import { Button } from "../ui/button";
 import FireImg from "@/assets/img/fire.png";
 import { useRouter } from "next/navigation";
+import Logo from "@/assets/icons/memory-game-logo.svg";
+// imgs game (animals)
+import Golfinho from "@/assets/img/board-game-animals/golfinho-min.png";
+import Tucano from "@/assets/img/board-game-animals/tucano-min.png";
+import Capivara from "@/assets/img/board-game-animals/capivara-min.png";
+import Panda from "@/assets/img/board-game-animals/panda-min.png";
+import Coelho from "@/assets/img/board-game-animals/coelho-min.png";
 
 export default function HomePage() {
   const router = useRouter();
   const [images, setImages] = useState<CardImage[]>([
     {
       id: 1,
-      key: "SHARK",
+      key: "COELHO",
       isFlipped: false,
       isMatched: false,
-      image: Shark,
+      image: Coelho,
     },
     {
       id: 2,
-      key: "SHARK",
+      key: "COELHO",
       isFlipped: false,
       isMatched: false,
-      image: Shark,
+      image: Coelho,
     },
     {
       id: 3,
-      key: "CROCODILE",
+      key: "GOLFINHO",
       isFlipped: false,
       isMatched: false,
-      image: Crocodile,
+      image: Golfinho,
     },
     {
       id: 4,
-      key: "CROCODILE",
+      key: "GOLFINHO",
       isFlipped: false,
       isMatched: false,
-      image: Crocodile,
+      image: Golfinho,
     },
     {
       id: 5,
-      key: "RACUM",
-      isFlipped: true, // Deixar o Racum aberto
+      key: "CAPIVARA",
+      isFlipped: true,
       isMatched: false,
-      image: Racum,
+      image: Capivara,
     },
     {
       id: 6,
-      key: "RACUM",
-      isFlipped: true, // Deixar o Racum aberto
+      key: "CAPIVARA",
+      isFlipped: true,
       isMatched: false,
-      image: Racum,
+      image: Capivara,
     },
     {
       id: 7,
       key: "TUCANO",
-      isFlipped: true, // Deixar o Tucano aberto
+      isFlipped: true,
       isMatched: false,
       image: Tucano,
     },
     {
       id: 8,
       key: "TUCANO",
-      isFlipped: true, // Deixar o Tucano aberto
+      isFlipped: true,
       isMatched: false,
       image: Tucano,
     },
     {
       id: 9,
-      key: "SPIDER",
+      key: "PANDA",
       isFlipped: false,
       isMatched: false,
-      image: Spider,
+      image: Panda,
     },
     {
       id: 10,
-      key: "SPIDER",
+      key: "PANDA",
       isFlipped: false,
       isMatched: false,
-      image: Spider,
+      image: Panda,
     },
   ]);
 

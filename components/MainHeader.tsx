@@ -14,7 +14,6 @@ import { useParams, usePathname, useRouter } from "next/navigation";
 import { toast } from "sonner";
 import Image from "next/image";
 import Logo from "@/assets/icons/memory-game-logo.svg";
-import { socket } from "@/app/socket";
 import DialogConfirmExitRoom from "@/app/room/[id]/components/DialogConfirmExitRoom";
 
 export default function MainHeader({
@@ -25,8 +24,8 @@ export default function MainHeader({
   isGameBoard?: boolean;
 }) {
   const router = useRouter();
-  const [nickName, setNickName] = useState<string>("");
-  const [avatar, setAvatar] = useState<string>("");
+  const [nickName, setNickName] = useState<string | null>(null);
+  const [avatar, setAvatar] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const pathname = usePathname();
   const { id } = useParams();
@@ -94,7 +93,13 @@ export default function MainHeader({
 
                 {!loading && (
                   <>
-                    <img src={avatar} className="w-7 h-7 rounded-full" alt="" />
+                    {avatar && (
+                      <img
+                        src={avatar}
+                        className="w-7 h-7 rounded-full"
+                        alt=""
+                      />
+                    )}
                     {nickName && nickName.length ? nickName : "Configurações"}
                   </>
                 )}

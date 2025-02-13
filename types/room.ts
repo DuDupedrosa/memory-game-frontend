@@ -5,4 +5,5 @@ export type RoomDataType = {
   guestId?: string;
   players: string[] | [];
   matchRandomNumber: number;
+  level: number;
 };

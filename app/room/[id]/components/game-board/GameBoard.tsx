@@ -1,12 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import Shark from "@/assets/img/shark.jpg";
-import Crocodile from "@/assets/img/crocodile.jpg";
-import Racum from "@/assets/img/racum.jpg";
-import Spider from "@/assets/img/spider.jpg";
-import Tucano from "@/assets/img/tucano.jpg";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { apiService } from "@/app/apiService";
 import { RoomDataType } from "@/types/room";
 import { socket } from "@/app/socket";
@@ -18,7 +13,242 @@ import AstronautaSvg from "@/assets/icons/astronauta.svg";
 import AlienSvg from "@/assets/icons/alien.svg";
 import Confetti from "react-confetti";
 import { CardImage } from "@/types/game";
+// animal-images
+import Preguica from "@/assets/img/board-game-animals/preguica-min.png";
+import Foca from "@/assets/img/board-game-animals/foca-min.png";
+import Coelho from "@/assets/img/board-game-animals/coelho-min.png";
+import Tartaruga from "@/assets/img/board-game-animals/tartaruga-min.png";
+import Capivara from "@/assets/img/board-game-animals/capivara-min.png";
+import Panda from "@/assets/img/board-game-animals/panda-min.png";
+import Papagaio from "@/assets/img/board-game-animals/papagaio-min.png";
+import Golfinho from "@/assets/img/board-game-animals/golfinho-min.png";
+import Tucano from "@/assets/img/board-game-animals/tucano-min.png";
+import Girafa from "@/assets/img/board-game-animals/girafa-min.png";
+import PeixePalhaco from "@/assets/img/board-game-animals/peixe-palhaco-min.png";
+import OncaPintada from "@/assets/img/board-game-animals/onca-pintada-min.png";
+import Coruja from "@/assets/img/board-game-animals/coruja-min.png";
+import Lontra from "@/assets/img/board-game-animals/lontra-min.png";
+import Arara from "@/assets/img/board-game-animals/arara-min.png";
+import { LevelEnum, LevelEnumType } from "@/helpers/enum/levelEnum";
 
+const animal_level_1_imgs: CardImage[] = [
+  {
+    id: 1,
+    key: "PREGUICA",
+    isFlipped: false,
+    isMatched: false,
+    image: Preguica,
+  },
+  {
+    id: 2,
+    key: "PREGUICA",
+    isFlipped: false,
+    isMatched: false,
+    image: Preguica,
+  },
+  {
+    id: 3,
+    key: "FOCA",
+    isFlipped: false,
+    isMatched: false,
+    image: Foca,
+  },
+  {
+    id: 4,
+    key: "FOCA",
+    isFlipped: false,
+    isMatched: false,
+    image: Foca,
+  },
+  {
+    id: 5,
+    key: "COELHO",
+    isFlipped: false,
+    isMatched: false,
+    image: Coelho,
+  },
+  {
+    id: 6,
+    key: "COELHO",
+    isFlipped: false,
+    isMatched: false,
+    image: Coelho,
+  },
+  {
+    id: 7,
+    key: "TARTARUGA",
+    isFlipped: false,
+    isMatched: false,
+    image: Tartaruga,
+  },
+  {
+    id: 8,
+    key: "TARTARUGA",
+    isFlipped: false,
+    isMatched: false,
+    image: Tartaruga,
+  },
+  {
+    id: 9,
+    key: "CAPIVARA",
+    isFlipped: false,
+    isMatched: false,
+    image: Capivara,
+  },
+  {
+    id: 10,
+    key: "CAPIVARA",
+    isFlipped: false,
+    isMatched: false,
+    image: Capivara,
+  },
+];
+
+const animal_level_2_imgs: CardImage[] = [
+  {
+    id: 11,
+    key: "PANDA",
+    isFlipped: false,
+    isMatched: false,
+    image: Panda,
+  },
+  {
+    id: 12,
+    key: "PANDA",
+    isFlipped: false,
+    isMatched: false,
+    image: Panda,
+  },
+  {
+    id: 13,
+    key: "PAPAGIO",
+    isFlipped: false,
+    isMatched: false,
+    image: Papagaio,
+  },
+  {
+    id: 14,
+    key: "PAPAGIO",
+    isFlipped: false,
+    isMatched: false,
+    image: Papagaio,
+  },
+  {
+    id: 15,
+    key: "GOLFINHO",
+    isFlipped: false,
+    isMatched: false,
+    image: Golfinho,
+  },
+  {
+    id: 16,
+    key: "GOLFINHO",
+    isFlipped: false,
+    isMatched: false,
+    image: Golfinho,
+  },
+  {
+    id: 17,
+    key: "TUCANO",
+    isFlipped: false,
+    isMatched: false,
+    image: Tucano,
+  },
+  {
+    id: 18,
+    key: "TUCANO",
+    isFlipped: false,
+    isMatched: false,
+    image: Tucano,
+  },
+];
+
+const animal_level_3_imgs: CardImage[] = [
+  {
+    id: 19,
+    key: "GIRAFA",
+    isFlipped: false,
+    isMatched: false,
+    image: Girafa,
+  },
+  {
+    id: 20,
+    key: "GIRAFA",
+    isFlipped: false,
+    isMatched: false,
+    image: Girafa,
+  },
+  {
+    id: 21,
+    key: "PEIXEPALHACO",
+    isFlipped: false,
+    isMatched: false,
+    image: PeixePalhaco,
+  },
+  {
+    id: 22,
+    key: "PEIXEPALHACO",
+    isFlipped: false,
+    isMatched: false,
+    image: PeixePalhaco,
+  },
+  {
+    id: 23,
+    key: "ONCAPINTADA",
+    isFlipped: false,
+    isMatched: false,
+    image: OncaPintada,
+  },
+  {
+    id: 24,
+    key: "ONCAPINTADA",
+    isFlipped: false,
+    isMatched: false,
+    image: OncaPintada,
+  },
+  {
+    id: 25,
+    key: "CORUJA",
+    isFlipped: false,
+    isMatched: false,
+    image: Coruja,
+  },
+  {
+    id: 26,
+    key: "CORUJA",
+    isFlipped: false,
+    isMatched: false,
+    image: Coruja,
+  },
+  {
+    id: 27,
+    key: "LONTRA",
+    isFlipped: false,
+    isMatched: false,
+    image: Lontra,
+  },
+  {
+    id: 28,
+    key: "LONTRA",
+    isFlipped: false,
+    isMatched: false,
+    image: Lontra,
+  },
+  {
+    id: 29,
+    key: "ARARA",
+    isFlipped: false,
+    isMatched: false,
+    image: Arara,
+  },
+  {
+    id: 30,
+    key: "ARARA",
+    isFlipped: false,
+    isMatched: false,
+    image: Arara,
+  },
+];
 export default function GameBoard({
   id,
   playAgain,
@@ -27,7 +257,7 @@ export default function GameBoard({
   playAgain: () => void;
 }) {
   const [roomData, setRoomData] = useState<RoomDataType | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
   const [isPlayerTurn, setIsPlayerTurn] = useState<boolean>(false);
   const [roundScore, setRoundScore] = useState<number>(0);
   const [enemyScore, setEnemyScore] = useState<number>(0);
@@ -37,79 +267,9 @@ export default function GameBoard({
     win: boolean;
   }>({ open: false, win: false });
 
-  const [images, setImages] = useState<CardImage[]>([
-    {
-      id: 1,
-      key: "SHARK",
-      isFlipped: false,
-      isMatched: false,
-      image: Shark,
-    },
-    {
-      id: 2,
-      key: "SHARK",
-      isFlipped: false,
-      isMatched: false,
-      image: Shark,
-    },
-    {
-      id: 3,
-      key: "CROCODILE",
-      isFlipped: false,
-      isMatched: false,
-      image: Crocodile,
-    },
-    {
-      id: 4,
-      key: "CROCODILE",
-      isFlipped: false,
-      isMatched: false,
-      image: Crocodile,
-    },
-    {
-      id: 5,
-      key: "RACUM",
-      isFlipped: false,
-      isMatched: false,
-      image: Racum,
-    },
-    {
-      id: 6,
-      key: "RACUM",
-      isFlipped: false,
-      isMatched: false,
-      image: Racum,
-    },
-    {
-      id: 7,
-      key: "TUCANO",
-      isFlipped: false,
-      isMatched: false,
-      image: Tucano,
-    },
-    {
-      id: 8,
-      key: "TUCANO",
-      isFlipped: false,
-      isMatched: false,
-      image: Tucano,
-    },
-    {
-      id: 9,
-      key: "SPIDER",
-      isFlipped: false,
-      isMatched: false,
-      image: Spider,
-    },
-    {
-      id: 10,
-      key: "SPIDER",
-      isFlipped: false,
-      isMatched: false,
-      image: Spider,
-    },
-  ]);
+  const [images, setImages] = useState<CardImage[] | []>([]);
   const [flipCardLoading, setFlipCardLoading] = useState<boolean>(false);
+  const imagesRef = useRef<CardImage[]>([]);
 
   function seededRandom(seed: number) {
     let x = Math.sin(seed++) * 10000;
@@ -117,12 +277,13 @@ export default function GameBoard({
   }
 
   function shuffleArray(array: CardImage[], seed: number) {
-    for (let i = array.length - 1; i > 0; i--) {
+    let cloneArray = [...array];
+    for (let i = cloneArray.length - 1; i > 0; i--) {
       const j = Math.floor(seededRandom(seed) * (i + 1));
-      [array[i], array[j]] = [array[j], array[i]]; // Swap
+      [cloneArray[i], cloneArray[j]] = [cloneArray[j], cloneArray[i]]; // Swap
       seed++;
     }
-    return array;
+    return cloneArray;
   }
 
   async function handleFlipCard(index: number) {
@@ -152,7 +313,7 @@ export default function GameBoard({
       const imageFlipped = flippedImages.find((img) => img.id === image.id);
 
       // previnir o click na imagem aberta
-      if (!image.isMatched && !imageFlipped) {
+      if (!image.isMatched && !imageFlipped && images) {
         setFlipCardLoading(true);
         socket.emit("requestFlipCard", {
           roomId: roomData?.id,
@@ -170,13 +331,13 @@ export default function GameBoard({
       setIsPlayerTurn(playerId === user.id);
 
       setTimeout(() => {
-        const payload = images.map((image) => {
+        const payload = imagesRef.current.map((image) => {
           if (image.isFlipped) image.isFlipped = false;
 
           return image;
         });
 
-        setImages(payload);
+        setImages([...payload]);
       }, 500);
     } catch (err) {}
   }
@@ -193,7 +354,7 @@ export default function GameBoard({
     if (matchPoint) {
       // seta para ficar aberta pra sempre
       // emitir o evento do ponto do jogador
-      const payload = images.map((image) => {
+      const payload = imagesRef.current.map((image) => {
         if (image.key === flippedImages[0].key) {
           image.isMatched = true;
           image.isFlipped = false;
@@ -202,7 +363,7 @@ export default function GameBoard({
         return image;
       });
 
-      setImages(payload);
+      setImages([...payload]);
 
       socket.emit("requestMakePoint", {
         playerId: user.id,
@@ -219,7 +380,7 @@ export default function GameBoard({
   function handleFlippedCard(id: number) {
     try {
       // não pode abrir mais de 2 cartas
-      const image = images.find((image) => image.id === id);
+      const image = imagesRef.current.find((image) => image.id === id);
 
       if (!image) {
         setFlipCardLoading(false);
@@ -227,12 +388,12 @@ export default function GameBoard({
       }
 
       // atualizando o board
-      const newImages = images.map((image) => {
+      const newImages = imagesRef.current.map((image) => {
         if (image.id === id) image.isFlipped = true;
 
         return image;
       });
-      setImages(newImages);
+      setImages([...newImages]);
 
       const flippedImages = newImages.filter((image) => image.isFlipped);
 
@@ -249,6 +410,8 @@ export default function GameBoard({
       open: false,
       win: false,
     });
+    setImages([]);
+    imagesRef.current = [];
     playAgain();
   }
 
@@ -271,10 +434,13 @@ export default function GameBoard({
     }
   }
 
-  function handleMarkedPoint(scores: { playerId: string; value: number }[]) {
+  function handleMarkedPoint(
+    victoryPoint: number,
+    scores: { playerId: string; value: number }[]
+  ) {
     const user = getUserLocal();
     if (!user) return;
-    const winPlayer = scores.find((score) => score.value === 3);
+    const winPlayer = scores.find((score) => score.value === victoryPoint);
 
     if (winPlayer) {
       socket.emit("requestGameWin", {
@@ -299,13 +465,28 @@ export default function GameBoard({
     router.replace("/room");
   }
 
-  useEffect(() => {
-    shuffleArray(
-      images.map((image) => image.image),
-      100
-    );
-    setLoading(false);
+  function getImagesToShuffle(level: number) {
+    const literal = {
+      [LevelEnum.EASY]: [...animal_level_1_imgs],
+      [LevelEnum.MEDIUM]: [...animal_level_1_imgs, ...animal_level_2_imgs],
+      [LevelEnum.HARD]: [
+        ...animal_level_1_imgs,
+        ...animal_level_2_imgs,
+        ...animal_level_3_imgs,
+      ],
+    };
 
+    const data = literal[level as LevelEnumType].map((img) => {
+      img.isFlipped = false;
+      img.isMatched = false;
+
+      return img;
+    });
+
+    return data;
+  }
+
+  useEffect(() => {
     const fetchRoom = async (roomId: number) => {
       try {
         const { data } = await apiService.get(`room/data/${roomId}`);
@@ -326,12 +507,20 @@ export default function GameBoard({
   }, [id]);
 
   useEffect(() => {
-    if (roomData) {
-      const shuffledImages = shuffleArray(images, roomData.matchRandomNumber);
-      setImages(shuffledImages);
-      setLoading(false);
-    }
+    if (!roomData || !roomData.level || images.length > 0) return;
+    const imagesToShuffle = getImagesToShuffle(roomData.level);
+
+    const shuffledImages = shuffleArray(
+      imagesToShuffle,
+      roomData.matchRandomNumber
+    );
+    setImages([...shuffledImages]);
+    setLoading(false);
   }, [roomData]);
+
+  useEffect(() => {
+    imagesRef.current = images; // Sempre mantém o valor mais recente do estado
+  }, [images]);
 
   useEffect(() => {
     const handleFlippedCardListener = (data: { id: number }) => {
@@ -347,9 +536,10 @@ export default function GameBoard({
 
     const handleMarkedPointListener = (data: {
       roomId: number;
+      victoryPoint: number;
       scores: { playerId: string; value: number }[];
     }) => {
-      handleMarkedPoint(data.scores);
+      handleMarkedPoint(data.victoryPoint, data.scores);
     };
 
     const handleWinListener = (data: {
@@ -382,6 +572,10 @@ export default function GameBoard({
       socket.off("exitGame", handleExitGameListener);
     };
   }, [socket]);
+
+  useEffect(() => {
+    setImages([]);
+  }, []);
 
   return (
     <div className="flex flex-col min-h-screen h-full bg-gray-900">
