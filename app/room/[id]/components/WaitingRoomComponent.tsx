@@ -261,11 +261,15 @@ export default function WaitingRoomComponent({ id }: { id: number | null }) {
             <div>
               {roomData && roomData.ownerId === userLocal?.id && (
                 <Button
-                  disabled={!playerTwoIsReady || startGameLoading}
+                  disabled={
+                    !playerTwoIsReady || startGameLoading || loadingRoomUsers
+                  }
                   className="mt-5 w-full"
                   onClick={() => handleRequestStartGame()}
                 >
-                  {startGameLoading && <Loader2 className="animate-spin" />}
+                  {(startGameLoading || loadingRoomUsers) && (
+                    <Loader2 className="animate-spin" />
+                  )}
                   Iniciar partida
                 </Button>
               )}
@@ -275,11 +279,15 @@ export default function WaitingRoomComponent({ id }: { id: number | null }) {
             <div>
               {roomData && roomData.ownerId !== userLocal?.id && (
                 <Button
-                  disabled={playerTwoIsReady || readyToPlayLoading}
+                  disabled={
+                    playerTwoIsReady || readyToPlayLoading || loadingRoomUsers
+                  }
                   className="mt-5 w-full"
                   onClick={() => handleReadyToPlayGame()}
                 >
-                  {readyToPlayLoading && <Loader2 className="animate-spin" />}
+                  {(readyToPlayLoading || loadingRoomUsers) && (
+                    <Loader2 className="animate-spin" />
+                  )}
                   I'm ready to play
                 </Button>
               )}

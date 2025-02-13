@@ -256,6 +256,10 @@ export default function GameBoard({
   id: number | null;
   playAgain: () => void;
 }) {
+  // Criar refs com um valor inicial vazio, mas sem null
+  const winSound = useRef<HTMLAudioElement>(new Audio("/sounds/win.mp3"));
+  const loseSound = useRef<HTMLAudioElement>(new Audio("/sounds/lose.mp3"));
+
   const [roomData, setRoomData] = useState<RoomDataType | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [isPlayerTurn, setIsPlayerTurn] = useState<boolean>(false);
@@ -415,6 +419,15 @@ export default function GameBoard({
     playAgain();
   }
 
+  function playSound(audioRef: React.RefObject<HTMLAudioElement>) {
+    if (audioRef.current) {
+      audioRef.current.currentTime = 0; // Reinicia o som para evitar delays
+      audioRef.current
+        .play()
+        .catch((err) => console.error("Erro ao reproduzir o áudio:", err));
+    }
+  }
+
   async function handleWin(winnerId: string) {
     const user = getUserLocal();
     if (!user) return;
@@ -425,12 +438,14 @@ export default function GameBoard({
         open: true,
         win: true,
       });
+      playSound(winSound); // Usar o áudio pré-carregado
     } else {
       //perdeu
       setDialogWinOrLose({
         open: true,
         win: false,
       });
+      playSound(loseSound);
     }
   }
 
@@ -574,6 +589,8 @@ export default function GameBoard({
   }, [socket]);
 
   useEffect(() => {
+    winSound.current.volume = 0.5;
+    loseSound.current.volume = 0.5;
     setImages([]);
   }, []);
 
@@ -644,6 +661,8 @@ export default function GameBoard({
                         className="w-full h-full object-cover rounded-lg"
                         src={image.image}
                         alt="Memory game image"
+                        draggable="false"
+                        onDragStart={(e) => e.preventDefault()}
                       />
                     </div>
                   </div>

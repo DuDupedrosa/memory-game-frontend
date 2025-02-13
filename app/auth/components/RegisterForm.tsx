@@ -32,7 +32,9 @@ const formSchema = z.object({
     .string()
     .email({ message: ptJson.invalid_format_email })
     .min(1, { message: ptJson.required_field }),
-  password: z.string().min(1, { message: ptJson.required_field }),
+  password: z
+    .string()
+    .min(6, { message: "A senha precisa ter no minimo 6 caracteres" }),
 });
 
 export default function RegisterForm({ goToLogin }: { goToLogin: () => void }) {

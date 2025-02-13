@@ -24,7 +24,9 @@ import { LevelEnum } from "@/helpers/enum/levelEnum";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 const formSchema = z.object({
-  password: z.string().min(1, { message: "Campo obrigatório" }),
+  password: z
+    .string()
+    .min(3, { message: "A senha precisa ter no minimo 3 caracteres" }),
   level: z.enum(
     [String(LevelEnum.EASY), String(LevelEnum.MEDIUM), String(LevelEnum.HARD)],
     {
