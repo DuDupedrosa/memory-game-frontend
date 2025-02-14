@@ -13,6 +13,7 @@ import { useEffect, useState } from "react";
 import GameOver from "@/assets/img/fim-de-jogo.png";
 import Image from "next/image";
 import Trophy from "@/assets/img/trophy.png";
+import ptJson from "@/helpers/translation/pt.json";
 
 export default function DialogWinOrLose({
   open,
@@ -65,10 +66,12 @@ export default function DialogWinOrLose({
                   <Image alt="win-gane" src={Trophy} className="w-32 h-32" />
                 </div>
               )}
-              {win ? "🎉 Parabéns você ganhou!" : "😭 Poxa, você perdeu!"}
+              {win ? ptJson.game_result_win : ptJson.game_result_lose}
             </DialogTitle>
             <DialogDescription className="text-base md:text-lg text-center mt-2">
-              {win ? "Ganhou, monstro!!" : "Perdeu, melhore!!"}
+              {win
+                ? ptJson.game_result_win_message
+                : ptJson.game_result_lose_message}
             </DialogDescription>
           </DialogHeader>
 
@@ -78,14 +81,14 @@ export default function DialogWinOrLose({
               onClick={() => playAgain()}
               className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-6 rounded-lg transition duration-200 ease-in-out transform hover:scale-105"
             >
-              Jogar novamente
+              {ptJson.play_again}
             </Button>
             <Button
               onClick={() => handleExitGame()}
               variant="secondary"
               className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-6 rounded-lg transition duration-200 ease-in-out transform hover:scale-105"
             >
-              Sair do jogo
+              {ptJson.exit_game}
             </Button>
           </div>
         </DialogContent>

@@ -37,7 +37,9 @@ apiService.interceptors.response.use(
       }
 
       if (errStatus === HttpStatusCode.InternalServerError) {
-        toast.error("An unexpected error occurred. Please try again later.");
+        toast.error(
+          "Ocorreu um erro inesperado. Por favor, tente novamente mais tarde."
+        );
       }
     }
 

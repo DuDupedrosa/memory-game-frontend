@@ -31,6 +31,7 @@ import Lontra from "@/assets/img/board-game-animals/lontra-min.png";
 import Arara from "@/assets/img/board-game-animals/arara-min.png";
 import { LevelEnum, LevelEnumType } from "@/helpers/enum/levelEnum";
 import { getRoomLevelText } from "@/helpers/getRoomLevel";
+import ptJson from "@/helpers/translation/pt.json";
 
 const animal_level_1_imgs: CardImage[] = [
   {
@@ -305,7 +306,7 @@ export default function GameBoard({
   async function handleFlipCard(index: number) {
     try {
       if (flipCardLoading) {
-        toast.warning("Aguarde, estamos carregando sua virada de carta");
+        toast.warning(ptJson.loading_card_flip);
         return;
       }
 
@@ -436,7 +437,7 @@ export default function GameBoard({
       audioRef.current.currentTime = 0; // Reinicia o som para evitar delays
       audioRef.current
         .play()
-        .catch((err) => console.error("Erro ao reproduzir o áudio:", err));
+        .catch((err) => console.error(ptJson.audio_playback_error, err));
     }
   }
 
@@ -489,7 +490,7 @@ export default function GameBoard({
       open: false,
       win: false,
     });
-    toast.warning("O jogador saiu da sala, entre novamente.");
+    toast.warning(ptJson.opponent_disconnected);
     router.replace("/room");
   }
 
@@ -618,7 +619,7 @@ export default function GameBoard({
       <div className="pb-12">
         {/* card inicial com placar e dem que é a vez */}
         <div className="w-64 mx-auto mb-12 mt-5 p-4 bg-purple-900 text-purple-300 border-4 border-purple-500 rounded-lg shadow-lg text-center">
-          <h2 className="text-lg font-bold mb-2">Placar</h2>
+          <h2 className="text-lg font-bold mb-2">{ptJson.score}</h2>
           {roomData && (
             <h3 className="text-sm font-semibold text-purple-200 bg-purple-800 px-2 py-1 rounded-md inline-block mb-2">
               {getRoomLevelText(roomData.level)}
@@ -627,7 +628,7 @@ export default function GameBoard({
 
           <div className="flex justify-between">
             <div className="flex-1 flex flex-col items-center">
-              <span className="font-mono text-sm">(You)</span>
+              <span className="font-mono text-sm">({ptJson.you})</span>
               <span className="block text-2xl font-mono">
                 <Image className="w-7" alt="astronauta" src={AstronautaSvg} />
               </span>
@@ -637,7 +638,7 @@ export default function GameBoard({
               VS
             </span>
             <div className="flex-1 flex flex-col items-center">
-              <span className="font-mono text-sm">(Enemy)</span>
+              <span className="font-mono text-sm">({ptJson.enemy})</span>
               <span className="block">
                 <Image alt="alien" className="w-7" src={AlienSvg} />
               </span>
@@ -648,7 +649,9 @@ export default function GameBoard({
           {/* Mensagem de turno */}
           <div className="mt-4 py-1 md:py-2 px-2 md:px-4 bg-purple-700 text-white rounded-lg shadow-md">
             <span className="block text-lg md:text-2xl font-bold">
-              {isPlayerTurn ? "Sua vez de jogar" : "Aguarde sua vez"}
+              {isPlayerTurn
+                ? ptJson.your_time_to_play
+                : ptJson.wait_your_time_to_play}
             </span>
           </div>
         </div>

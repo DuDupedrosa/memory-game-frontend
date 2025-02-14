@@ -13,6 +13,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { GoAlertFill } from "react-icons/go";
 import { toast } from "sonner";
+import ptJson from "@/helpers/translation/pt.json";
 
 export default function DialogConfirmExitRoom({
   open,
@@ -51,15 +52,13 @@ export default function DialogConfirmExitRoom({
           window.localStorage.clear();
           router.push("/auth");
 
-          toast.info("Você foi desconectado. Faça login novamente.");
+          toast.info(ptJson.disconnected);
         } else {
           // ele só quer sair da sala, ai volta para a /room
           router.replace("/room");
         }
       } else {
-        toast.error(
-          "Um erro acontenceu ao sair da sala, tente novamente em alguns instantes."
-        );
+        toast.error(ptJson.error_exiting_room);
       }
     } catch (err) {}
     setLoading(false);
@@ -83,16 +82,12 @@ export default function DialogConfirmExitRoom({
                 <GoAlertFill className="text-3xl text-red-600" />
               </div>
               <span className="text-xl text-center mb-2 font-medium block text-gray-50">
-                {isLoggedOut
-                  ? "Você tem certeza que quer encerrar sessão?"
-                  : "Você tem certeza que quer sair da sala?"}
+                {isLoggedOut ? ptJson.confirm_logout : ptJson.confirm_exit_room}
               </span>
             </DialogTitle>
             <DialogDescription>
               <p className="text-base mb-5 text-gray-400 text-center font-normal">
-                {isLoggedOut
-                  ? "Você vai sair da sala e vai ser deslogado"
-                  : "tem certeza? geral vai ser desconectado da sala incluindo vc"}
+                {ptJson.both_players_removed}
               </p>
             </DialogDescription>
           </DialogHeader>
@@ -104,13 +99,13 @@ export default function DialogConfirmExitRoom({
               className="bg-red-600 transition-all hover:bg-red-800 text-green-50"
             >
               {loading && <Loader2 className="animate-spin" />}
-              Sim, confirmar
+              {ptJson.confirm_yes}
             </Button>
             <Button
               onClick={() => handleClose()}
               className="bg-gray-600 hover:bg-gray-700 text-gray-50"
             >
-              Não, cancelar
+              {ptJson.confirm_no}
             </Button>
           </div>
         </DialogContent>

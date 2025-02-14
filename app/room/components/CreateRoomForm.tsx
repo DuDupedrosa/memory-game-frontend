@@ -22,15 +22,14 @@ import { useState } from "react";
 import { eyeInputIconStyle, iconInputStyle } from "./RoomComponent";
 import { LevelEnum } from "@/helpers/enum/levelEnum";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import ptJson from "@/helpers/translation/pt.json";
 
 const formSchema = z.object({
-  password: z
-    .string()
-    .min(3, { message: "A senha precisa ter no minimo 3 caracteres" }),
+  password: z.string().min(3, { message: ptJson.room_password_min_length }),
   level: z.enum(
     [String(LevelEnum.EASY), String(LevelEnum.MEDIUM), String(LevelEnum.HARD)],
     {
-      required_error: "Capo obrigatório",
+      required_error: ptJson.required_field,
     }
   ),
 });
@@ -89,7 +88,7 @@ export default function CreateRoomComponent() {
                 render={({ field }) => (
                   <FormItem className="space-y-3">
                     <FormLabel className="text-gray-400">
-                      Nivel de dificuldade
+                      {ptJson.difficulty_level}
                     </FormLabel>
                     <FormControl>
                       <RadioGroup
@@ -102,7 +101,7 @@ export default function CreateRoomComponent() {
                             <RadioGroupItem value={String(LevelEnum.EASY)} />
                           </FormControl>
                           <FormLabel className="font-normal text-gray-50">
-                            Fácil
+                            {ptJson.difficulty_easy}
                           </FormLabel>
                         </FormItem>
                         <FormItem className="flex items-center space-x-3 space-y-0">
@@ -110,7 +109,7 @@ export default function CreateRoomComponent() {
                             <RadioGroupItem value={String(LevelEnum.MEDIUM)} />
                           </FormControl>
                           <FormLabel className="font-normal text-gray-50">
-                            Médio
+                            {ptJson.difficulty_medium}
                           </FormLabel>
                         </FormItem>
                         <FormItem className="flex items-center space-x-3 space-y-0">
@@ -118,7 +117,7 @@ export default function CreateRoomComponent() {
                             <RadioGroupItem value={String(LevelEnum.HARD)} />
                           </FormControl>
                           <FormLabel className="font-normal text-gray-50">
-                            Dificil
+                            {ptJson.difficulty_hard}
                           </FormLabel>
                         </FormItem>
                       </RadioGroup>
@@ -135,7 +134,7 @@ export default function CreateRoomComponent() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-gray-400" htmlFor="id">
-                      Password
+                      {ptJson.password}
                     </FormLabel>
                     <FormControl>
                       <div className="relative w-full">
@@ -170,7 +169,7 @@ export default function CreateRoomComponent() {
 
           <Button disabled={loading} className="mt-5 w-full" type="submit">
             {loading && <Loader2 className="animate-spin" />}
-            Submit
+            {ptJson.submit}
           </Button>
         </form>
       </Form>

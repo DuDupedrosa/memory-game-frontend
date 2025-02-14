@@ -24,10 +24,11 @@ import { eyeInputIconStyle, iconInputStyle } from "./RoomComponent";
 import { getRoomLevelText } from "@/helpers/getRoomLevel";
 import { copyToClipBoard } from "@/helpers/copyToClipBoard";
 import { FaCircleInfo } from "react-icons/fa6";
+import ptJson from "@/helpers/translation/pt.json";
 
 const formSchema = z.object({
-  id: z.number().min(1, { message: "Campo obrigatório" }),
-  password: z.string().min(1, { message: "Campo obrigatório" }),
+  id: z.number().min(1, { message: ptJson.required_field }),
+  password: z.string().min(1, { message: ptJson.required_field }),
 });
 
 export default function SignInRoomComponent() {
@@ -94,7 +95,7 @@ export default function SignInRoomComponent() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-gray-400" htmlFor="id">
-                      Room Id
+                      {ptJson.room_id}
                     </FormLabel>
                     <FormControl>
                       <div className="w-full relative">
@@ -123,7 +124,7 @@ export default function SignInRoomComponent() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-gray-400" htmlFor="id">
-                      Password
+                      {ptJson.password}
                     </FormLabel>
                     <FormControl>
                       <div className="relative w-full">
@@ -158,7 +159,7 @@ export default function SignInRoomComponent() {
 
           <Button disabled={loading} className="mt-5 w-full" type="submit">
             {loading && <Loader2 className="animate-spin" />}
-            Submit
+            {ptJson.submit}
           </Button>
         </form>
       </Form>
@@ -166,25 +167,26 @@ export default function SignInRoomComponent() {
       {rooms && rooms.length > 0 && (
         <div className="mt-5">
           <span className="block text-base font-medium text-gray-50">
-            Minhas salas recentes:
+            {ptJson.my_recent_rooms}:
           </span>
           <span className="flex items-center my-1 gap-2">
             <FaCircleInfo className="text-xs text-blue-600" />
-            <span className="text-gray-400 text-xs">Click para copiar</span>
+            <span className="text-gray-400 text-xs">
+              {ptJson.click_to_copy}
+            </span>
           </span>
           <ul className="flex flex-col gap-3 mt-3">
             {rooms.map((room, i) => {
               return (
                 <li
-                  onClick={() =>
-                    copyToClipBoard(room.id, "Id copiado para o clipboard")
-                  }
+                  onClick={() => copyToClipBoard(room.id, ptJson.id_copied)}
                   key={i}
                   className="flex items-center cursor-pointer gap-2 rounded p-1 hover:bg-gray-700"
                 >
                   <span className="w-2 h-2 bg-green-600 rounded-full block"></span>
                   <span className="text-base text-gray-400 font-bold flex items-center">
-                    Sala: <span className="ml-2 text-primary">{room.id}</span>{" "}
+                    {ptJson.room}:{" "}
+                    <span className="ml-2 text-primary">{room.id}</span>{" "}
                     <span className="rounded ml-5 block text-sm w-[45px] p-1 bg-gray-600 text-gray-400">
                       {getRoomLevelText(room.level)}
                     </span>

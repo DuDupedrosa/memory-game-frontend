@@ -22,6 +22,7 @@ import DialogConfirmExitRoom from "./DialogConfirmExitRoom";
 import DialogRemoveUser from "./DialogRemoveUser";
 import { getRoomLevelText } from "@/helpers/getRoomLevel";
 import { copyToClipBoard } from "@/helpers/copyToClipBoard";
+import ptJson from "@/helpers/translation/pt.json";
 
 export default function WaitingRoomComponent({ id }: { id: number | null }) {
   // Criar refs com um valor inicial vazio, mas sem null
@@ -47,7 +48,7 @@ export default function WaitingRoomComponent({ id }: { id: number | null }) {
       audioRef.current.currentTime = 0; // Reinicia o som para evitar delays
       audioRef.current
         .play()
-        .catch((err) => console.error("Erro ao reproduzir o áudio:", err));
+        .catch((err) => console.error(ptJson.audio_playback_error, err));
     }
   }
 
@@ -116,13 +117,11 @@ export default function WaitingRoomComponent({ id }: { id: number | null }) {
         playSound(readyToPlaySound);
         // alertando o dono da sala que ele poder começar o jogo
         if (user.id === data.ownerId) {
-          toast.success("Player two confirm! You free to start a game.");
+          toast.success(ptJson.player_two_confirmed);
         }
 
         if (user.id !== data.ownerId) {
-          toast.success(
-            "You're ready! Waiting for the host to start the game..."
-          );
+          toast.success(ptJson.waiting_host);
         }
       }
       setPlayerTwoIsReady(true);
@@ -169,7 +168,7 @@ export default function WaitingRoomComponent({ id }: { id: number | null }) {
               <div className="flex items-center gap-2">
                 <div>
                   <span className="text-2xl text-gray-50 font-normal">
-                    Room number:
+                    {ptJson.room_id}:
                     <span className="font-semibold text-gray-400"> {id}</span>
                   </span>
                 </div>
@@ -177,10 +176,7 @@ export default function WaitingRoomComponent({ id }: { id: number | null }) {
                 <div
                   className="p-1 cursor-pointer"
                   onClick={() =>
-                    copyToClipBoard(
-                      roomData?.id,
-                      "Room number copy to clipboard"
-                    )
+                    copyToClipBoard(roomData?.id, ptJson.id_copied)
                   }
                 >
                   <FaCopy className="text-primary text-xl" />
@@ -191,44 +187,42 @@ export default function WaitingRoomComponent({ id }: { id: number | null }) {
               <div className="grid grid-cols-[14px_1fr] items-center mt-1 md:mt-0 gap-2 mb-5">
                 <FaInfoCircle className="text-sm text-blue-600" />
 
-                <p className="text-sm text-gray-400">
-                  Share your room number with a friend to start a game.
-                </p>
+                <p className="text-sm text-gray-400">{ptJson.share_room}</p>
               </div>
               {roomData && (
                 <span className="text-base mb-1 font-normal text-gray-50 flex items-center">
-                  Level:{" "}
+                  {ptJson.difficulty_level}:{" "}
                   <span className="rounded p-1 text-gray-50 text-sm ml-1 bg-blue-600 flex items-center gap-2">
                     {getRoomLevelText(roomData.level)}
                   </span>
                 </span>
               )}
               <span className="text-base font-normal text-gray-50 flex items-center">
-                Status:{" "}
+                {ptJson.status}:{" "}
                 <span className="rounded p-1 text-gray-400 flex items-center gap-2">
                   {/* dono da sala - jogador 2 com status de pronto */}
                   {playerTwoIsReady &&
                     roomData &&
                     roomData.ownerId === userLocal?.id &&
-                    "Ready to start game"}
+                    ptJson.ready_to_start}
 
                   {/* dono da sala - jogador 2 com status de pendente */}
                   {!playerTwoIsReady &&
                     roomData &&
                     roomData.ownerId === userLocal?.id &&
-                    "Waiting for player 2 confirm"}
+                    ptJson.waiting_for_player_two}
 
                   {/* visitante - com status de confirmado */}
                   {playerTwoIsReady &&
                     roomData &&
                     roomData.ownerId !== userLocal?.id &&
-                    "Waiting player 1 start game"}
+                    ptJson.waiting_for_player_one}
 
                   {/* visitante - com status de pendente */}
                   {!playerTwoIsReady &&
                     roomData &&
                     roomData.ownerId !== userLocal?.id &&
-                    "Confirm to play a game"}
+                    ptJson.confirm_to_play}
 
                   <span className="relative flex size-3">
                     <span
@@ -250,7 +244,7 @@ export default function WaitingRoomComponent({ id }: { id: number | null }) {
           <CardContent className="pt-5 h-full flex-1 flex flex-col">
             <div className="flex-1">
               <h2 className="text-xl text-gray-50 font-medium mb-3">
-                Players:
+                {ptJson.players}:
               </h2>
               {loadingRoomUsers && (
                 <div>
@@ -264,8 +258,11 @@ export default function WaitingRoomComponent({ id }: { id: number | null }) {
                     return (
                       <li key={i} className="flex items-center gap-3">
                         <span className="flex text-base text-gray-400">
-                          ({userLocal?.id === user.id ? "You" : "Enemy"}){" "}
-                          {user.nickName}
+                          (
+                          {userLocal?.id === user.id
+                            ? ptJson.you
+                            : ptJson.enemy}
+                          ) {user.nickName}
                         </span>
 
                         {user.id !== roomData?.ownerId &&
@@ -295,7 +292,7 @@ export default function WaitingRoomComponent({ id }: { id: number | null }) {
                   {(startGameLoading || loadingRoomUsers) && (
                     <Loader2 className="animate-spin" />
                   )}
-                  Iniciar partida
+                  {ptJson.start_game}
                 </Button>
               )}
             </div>
@@ -313,7 +310,7 @@ export default function WaitingRoomComponent({ id }: { id: number | null }) {
                   {(readyToPlayLoading || loadingRoomUsers) && (
                     <Loader2 className="animate-spin" />
                   )}
-                  I'm ready to play
+                  {ptJson.ready_to_play}
                 </Button>
               )}
             </div>
@@ -323,7 +320,7 @@ export default function WaitingRoomComponent({ id }: { id: number | null }) {
                 onClick={() => setDialogExitRoom(true)}
                 className="w-full transition-all hover:bg-red-600 hover:text-gray-50 mt-5 bg-transparent border border-red-600 text-red-600"
               >
-                Exit room
+                {ptJson.exit_room}
               </Button>
             </div>
           </CardContent>

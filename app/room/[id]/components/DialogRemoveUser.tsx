@@ -13,6 +13,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { GoAlertFill } from "react-icons/go";
 import { toast } from "sonner";
+import ptJson from "@/helpers/translation/pt.json";
 
 export default function DialogRemoveUser({
   open,
@@ -44,14 +45,10 @@ export default function DialogRemoveUser({
           roomId: Number(id),
         });
 
-        toast.info(
-          "Player 2 removido com sucesso, entre na sala novamente para continuar."
-        );
+        toast.info(ptJson.player_two_removed);
         router.replace("/room");
       } else {
-        toast.error(
-          "Um erro acontenceu ao sair da sala, tente novamente em alguns instantes."
-        );
+        toast.error(ptJson.error_exiting_room);
       }
     } catch (err) {}
     setLoading(false);
@@ -72,16 +69,15 @@ export default function DialogRemoveUser({
               </div>
               <span className="text-xl text-center mb-2 font-normal block text-gray-50">
                 <span>
-                  Você tem certeza que deseja remover
+                  {ptJson.confirm_removal}
                   <span className="font-semibold"> {nickName} </span>
-                  desta sala?
+                  {ptJson.remove_from_room}
                 </span>
               </span>
             </DialogTitle>
             <DialogDescription>
               <p className="text-base mb-5 text-gray-400 text-center font-normal">
-                Você e seu adversário irão ser removidos da sala e vai ser
-                preciso entrar novamente.
+                {ptJson.both_players_removed}
               </p>
             </DialogDescription>
           </DialogHeader>
@@ -93,13 +89,13 @@ export default function DialogRemoveUser({
               className="bg-red-600 transition-all hover:bg-red-800 text-green-50"
             >
               {loading && <Loader2 className="animate-spin" />}
-              Sim, confirmar
+              {ptJson.confirm_yes}
             </Button>
             <Button
               onClick={() => handleClose()}
               className="bg-gray-600 hover:bg-gray-700 text-gray-50"
             >
-              Não, cancelar
+              {ptJson.confirm_no}
             </Button>
           </div>
         </DialogContent>

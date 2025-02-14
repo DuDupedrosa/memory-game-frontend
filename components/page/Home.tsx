@@ -6,6 +6,7 @@ import { Button } from "../ui/button";
 import FireImg from "@/assets/img/fire.png";
 import { useRouter } from "next/navigation";
 import Logo from "@/assets/icons/memory-game-logo.svg";
+import ptJson from "@/helpers/translation/pt.json";
 // imgs game (animals)
 import Golfinho from "@/assets/img/board-game-animals/golfinho-min.png";
 import Tucano from "@/assets/img/board-game-animals/tucano-min.png";
@@ -107,16 +108,16 @@ export default function HomePage() {
           src={Logo}
         />
         <h1 className="text-3xl md:text-4xl font-bold text-center mt-4 animate-fade-in">
-          Teste sua memória agora!
+          {ptJson.test_you_memory_now}
         </h1>
         <p className="text-gray-300 mt-2 text-base md:text-lg text-center max-w-md">
-          Melhore sua memória e divirta-se com nosso jogo gratuito.
+          {ptJson.subtitle_home}
         </p>
 
         {/* Novo Texto: Jogo Online 1v1 */}
         <p className="text-purple-400 mt-2 text-base md:text-lg flex items-start gap-2 font-medium md:font-semibold bg-gray-800 px-4 py-2 rounded-lg shadow-md">
           <Image alt="fire" src={FireImg} className="md:w-10 md:h-10 w-6 h-6" />{" "}
-          Desafie um amigo em um duelo 1v1 online!
+          {ptJson.challenge_friend_online}
         </p>
       </div>
 
@@ -126,13 +127,13 @@ export default function HomePage() {
           onClick={() => router.push("/auth")}
           className="h-14 px-6 py-3 text-lg font-semibold text-white bg-gradient-to-r from-purple-700 to-purple-500 rounded-lg shadow-lg transition-transform hover:scale-110 hover:shadow-purple-500/50"
         >
-          Jogar Agora
+          {ptJson.play_now}
         </Button>
         <Button
           onClick={() => router.push("/auth")}
           className="h-14 px-6 py-3 text-lg font-semibold text-white bg-gradient-to-r from-gray-700 to-gray-500 rounded-lg shadow-lg transition-transform hover:scale-110 hover:shadow-gray-500/50"
         >
-          Criar Conta
+          {ptJson.create_account}
         </Button>
       </div>
 
@@ -161,7 +162,7 @@ export default function HomePage() {
               <Image
                 className="w-full h-full object-cover rounded-lg"
                 src={image.image}
-                alt="Memory game image"
+                alt={image.key}
               />
             </div>
           </div>

@@ -70,7 +70,7 @@ export default function LoginForm({
     const unauthorized = localStorage.getItem("unauthorized");
 
     if (unauthorized && unauthorized === "true") {
-      toast.error("Unauthorized! Required Login.");
+      toast.error(ptJson.unauthorized_required_login);
       window.localStorage.removeItem("unauthorized");
     }
   }, []);
@@ -86,7 +86,7 @@ export default function LoginForm({
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel htmlFor="email">Email</FormLabel>
+                    <FormLabel htmlFor="email">{ptJson.email}</FormLabel>
                     <FormControl>
                       <div className="relative w-full">
                         <Mail className={iconInputStyle} />
@@ -105,7 +105,7 @@ export default function LoginForm({
                 name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel htmlFor="password">Password</FormLabel>
+                    <FormLabel htmlFor="password">{ptJson.password}</FormLabel>
                     <FormControl>
                       <div className="relative w-full">
                         {!showPassword && (
@@ -143,15 +143,15 @@ export default function LoginForm({
             type="submit"
           >
             {loading && <Loader2 className="animate-spin" />}
-            Log In
+            {ptJson.login}
           </Button>
         </form>
       </Form>
 
       <div className="flex flex-col items-center mt-16">
         <span onClick={() => goToRegister()} className={`${callActionNav}`}>
-          Don't have an account?
-          <span className="font-bold">Sign Up</span>
+          {ptJson.no_account}
+          <span className="font-bold">{ptJson.sign_up}</span>
         </span>
       </div>
     </div>

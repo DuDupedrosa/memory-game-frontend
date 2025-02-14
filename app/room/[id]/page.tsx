@@ -1,6 +1,6 @@
 "use client";
 
-import { useParams, useRouter } from "next/navigation"; // Usar o "next/navigation" ao invés de "next/router"
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import WaitingRoomComponent from "./components/WaitingRoomComponent";
 import { socket } from "@/app/socket";
@@ -8,6 +8,7 @@ import GameBoard from "./components/game-board/GameBoard";
 import { getUserLocal } from "@/helpers/getUserLoca";
 import MainHeader from "@/components/MainHeader";
 import { toast } from "sonner";
+import ptJson from "@/helpers/translation/pt.json";
 
 const componentStep = {
   WAITING_ROOM: 1,
@@ -78,9 +79,7 @@ export default function page() {
     };
 
     const handleLoggedOut = (data: { roomId: string; playerId: string }) => {
-      toast.warning(
-        "O seu oponente saiu ou foi desconectado da sala, por favor, entre novamente"
-      );
+      toast.warning(ptJson.opponent_disconnected);
       router.replace("/room");
     };
 

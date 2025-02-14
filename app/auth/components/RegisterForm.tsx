@@ -32,9 +32,7 @@ const formSchema = z.object({
     .string()
     .email({ message: ptJson.invalid_format_email })
     .min(1, { message: ptJson.required_field }),
-  password: z
-    .string()
-    .min(6, { message: "A senha precisa ter no minimo 6 caracteres" }),
+  password: z.string().min(6, { message: ptJson.password_min_length }),
 });
 
 export default function RegisterForm({ goToLogin }: { goToLogin: () => void }) {
@@ -77,7 +75,7 @@ export default function RegisterForm({ goToLogin }: { goToLogin: () => void }) {
                 name="nickName"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel htmlFor="nickName">Nickname</FormLabel>
+                    <FormLabel htmlFor="nickName">{ptJson.nickname}</FormLabel>
                     <FormControl>
                       <div className="relative w-full">
                         <Gamepad2 className={iconInputStyle} />
@@ -85,7 +83,7 @@ export default function RegisterForm({ goToLogin }: { goToLogin: () => void }) {
                       </div>
                     </FormControl>
                     <FormDescription>
-                      The name your opponents will see
+                      {ptJson.nickname_description}
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -98,7 +96,7 @@ export default function RegisterForm({ goToLogin }: { goToLogin: () => void }) {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel htmlFor="email">Email</FormLabel>
+                    <FormLabel htmlFor="email">{ptJson.email}</FormLabel>
                     <FormControl>
                       <div className="w-full relative">
                         <Mail className={iconInputStyle} />
@@ -117,7 +115,7 @@ export default function RegisterForm({ goToLogin }: { goToLogin: () => void }) {
                 name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel htmlFor="password">Password</FormLabel>
+                    <FormLabel htmlFor="password">{ptJson.password}</FormLabel>
                     <FormControl>
                       <div className="relative w-full">
                         {!showPassword && (
@@ -155,15 +153,15 @@ export default function RegisterForm({ goToLogin }: { goToLogin: () => void }) {
             type="submit"
           >
             {loading && <Loader2 className="animate-spin" />}
-            Submit
+            {ptJson.submit}
           </Button>
         </form>
       </Form>
 
       <div className="flex flex-col items-center mt-16">
         <span onClick={() => goToLogin()} className={`${callActionNav}`}>
-          Already have an account?
-          <span className="font-bold">Sign In</span>
+          {ptJson.already_have_account}
+          <span className="font-bold">{ptJson.sign_in}</span>
         </span>
       </div>
     </div>

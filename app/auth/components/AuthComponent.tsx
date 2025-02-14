@@ -10,7 +10,7 @@ import RegisterForm from "./RegisterForm";
 import LoginForm from "./LoginForm";
 import Image from "next/image";
 import Logo from "@/assets/icons/memory-game-logo.svg";
-
+import ptJson from "@/helpers/translation/pt.json";
 const componentStep = {
   SIGN_IN: 1,
   REGISTER: 2,
@@ -38,18 +38,18 @@ export default function AuthComponent() {
                   <Image
                     src={Logo}
                     className="md:w-40 md:h-40 w-36 h-36 rounded"
-                    alt="memory-game-log"
+                    alt="memory-game-logo"
                   />
                 </div>
                 <CardTitle className="text-3xl text-gray-900 font-semibold text-center mb-1">
                   {step === componentStep.SIGN_IN
-                    ? "Welcome back!"
-                    : "Create account!"}
+                    ? ptJson.welcome_back
+                    : ptJson.create_account}
                 </CardTitle>
                 <CardDescription className="text-center text-sm font-normal text-gray-900">
-                  {step === componentStep.REGISTER
-                    ? "Please enter your credentials"
-                    : "Please fill the form to register in our platform"}
+                  {step === componentStep.SIGN_IN
+                    ? ptJson.enter_your_credentials
+                    : ptJson.fill_the_form_to_register_account}
                 </CardDescription>
               </CardHeader>
 
