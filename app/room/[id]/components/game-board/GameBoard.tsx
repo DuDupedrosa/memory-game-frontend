@@ -647,44 +647,51 @@ export default function GameBoard({
         </div>
 
         {!loading && (
-          <div className="grid grid-cols-3 md:grid-cols-4 gap-5 max-w-max mx-auto">
-            {images &&
-              images.length > 0 &&
-              images.map((image, i) => {
-                return (
-                  <div
-                    onClick={() => handleFlipCard(i)}
-                    key={i}
-                    className="relative w-24 h-24 md:w-36 md:h-36 rounded-lg cursor-pointer shadow-lg"
-                  >
-                    {/* Parte de trás da carta */}
-                    <div
-                      className={`absolute inset-0 bg-blue-500 rounded-lg flex items-center justify-center text-white text-2xl font-bold ${
-                        image.isFlipped || image.isMatched ? "hidden" : ""
-                      }`}
-                    >
-                      ?
-                    </div>
+          <div
+            className="grid gap-2 sm:gap-3 md:gap-5 mx-auto w-full px-2 sm:px-5"
+            style={{
+              gridTemplateColumns: `repeat(auto-fit, minmax(90px, 1fr))`, // Mantém múltiplas colunas em qualquer situação
+              maxWidth:
+                images.length > 20
+                  ? "1120px"
+                  : images.length > 12
+                  ? "700px"
+                  : "500px", // Define um limite maior para mais cartas
+            }}
+          >
+            {images?.map((image, i) => (
+              <div
+                onClick={() => handleFlipCard(i)}
+                key={i}
+                className="relative aspect-square w-full max-w-[110px] md:max-w-[140px] rounded-lg cursor-pointer shadow-lg"
+              >
+                {/* Parte de trás da carta */}
+                <div
+                  className={`absolute inset-0 bg-blue-500 rounded-lg flex items-center justify-center text-white text-2xl font-bold ${
+                    image.isFlipped || image.isMatched ? "hidden" : ""
+                  }`}
+                >
+                  ?
+                </div>
 
-                    {/* Parte da frente da carta */}
-                    <div
-                      className={`absolute inset-0 rounded-lg bg-purple-900 ${
-                        image.isFlipped || image.isMatched
-                          ? "opacity-100"
-                          : "opacity-0"
-                      } transition-opacity duration-300 ease-in-out`}
-                    >
-                      <Image
-                        className="w-full h-full object-cover rounded-lg"
-                        src={image.image}
-                        alt="Memory game image"
-                        draggable="false"
-                        onDragStart={(e) => e.preventDefault()}
-                      />
-                    </div>
-                  </div>
-                );
-              })}
+                {/* Parte da frente da carta */}
+                <div
+                  className={`absolute inset-0 rounded-lg bg-purple-900 ${
+                    image.isFlipped || image.isMatched
+                      ? "opacity-100"
+                      : "opacity-0"
+                  } transition-opacity duration-300 ease-in-out`}
+                >
+                  <Image
+                    className="w-full h-full object-cover rounded-lg"
+                    src={image.image}
+                    alt="Memory game image"
+                    draggable="false"
+                    onDragStart={(e) => e.preventDefault()}
+                  />
+                </div>
+              </div>
+            ))}
           </div>
         )}
 

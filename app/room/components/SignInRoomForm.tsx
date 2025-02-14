@@ -21,6 +21,9 @@ import { getUserLocal } from "@/helpers/getUserLoca";
 import { Eye, EyeOff, Key, Loader2, LockKeyholeOpen } from "lucide-react";
 import { handleRequestApiErro } from "@/helpers/handleRequestApiErro";
 import { eyeInputIconStyle, iconInputStyle } from "./RoomComponent";
+import { getRoomLevelText } from "@/helpers/getRoomLevel";
+import { copyToClipBoard } from "@/helpers/copyToClipBoard";
+import { FaCircleInfo } from "react-icons/fa6";
 
 const formSchema = z.object({
   id: z.number().min(1, { message: "Campo obrigatório" }),
@@ -31,7 +34,7 @@ export default function SignInRoomComponent() {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
-  const [rooms, setRooms] = useState<number[] | []>([]);
+  const [rooms, setRooms] = useState<{ id: number; level: number }[] | []>([]);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -165,14 +168,26 @@ export default function SignInRoomComponent() {
           <span className="block text-base font-medium text-gray-50">
             Minhas salas recentes:
           </span>
-
+          <span className="flex items-center my-1 gap-2">
+            <FaCircleInfo className="text-xs text-blue-600" />
+            <span className="text-gray-400 text-xs">Click para copiar</span>
+          </span>
           <ul className="flex flex-col gap-3 mt-3">
-            {rooms.map((room_id, i) => {
+            {rooms.map((room, i) => {
               return (
-                <li key={i} className="flex items-center gap-2">
-                  <span className="w-2 h-2 bg-primary rounded-full block"></span>
-                  <span className="text-base text-gray-400 font-bold">
-                    Id: {room_id}
+                <li
+                  onClick={() =>
+                    copyToClipBoard(room.id, "Id copiado para o clipboard")
+                  }
+                  key={i}
+                  className="flex items-center cursor-pointer gap-2 rounded p-1 hover:bg-gray-700"
+                >
+                  <span className="w-2 h-2 bg-green-600 rounded-full block"></span>
+                  <span className="text-base text-gray-400 font-bold flex items-center">
+                    Sala: <span className="ml-2 text-primary">{room.id}</span>{" "}
+                    <span className="rounded ml-5 block text-sm w-[45px] p-1 bg-gray-600 text-gray-400">
+                      {getRoomLevelText(room.level)}
+                    </span>
                   </span>
                 </li>
               );

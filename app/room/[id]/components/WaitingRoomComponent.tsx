@@ -20,6 +20,8 @@ import { toast } from "sonner";
 import { getUserLocal } from "@/helpers/getUserLoca";
 import DialogConfirmExitRoom from "./DialogConfirmExitRoom";
 import DialogRemoveUser from "./DialogRemoveUser";
+import { getRoomLevelText } from "@/helpers/getRoomLevel";
+import { copyToClipBoard } from "@/helpers/copyToClipBoard";
 
 export default function WaitingRoomComponent({ id }: { id: number | null }) {
   // Criar refs com um valor inicial vazio, mas sem null
@@ -39,12 +41,6 @@ export default function WaitingRoomComponent({ id }: { id: number | null }) {
     open: boolean;
     nickname: string;
   }>({ open: false, nickname: "" });
-  function handleCopyRoomNumber(room: number) {
-    navigator.clipboard
-      .writeText(room.toString())
-      .then(() => toast.success("Room number copy to clipboard"))
-      .catch(() => toast.error("Erro copy room number! try again."));
-  }
 
   function playSound(audioRef: React.RefObject<HTMLAudioElement>) {
     if (audioRef.current) {
@@ -180,7 +176,12 @@ export default function WaitingRoomComponent({ id }: { id: number | null }) {
 
                 <div
                   className="p-1 cursor-pointer"
-                  onClick={() => handleCopyRoomNumber(Number(id))}
+                  onClick={() =>
+                    copyToClipBoard(
+                      roomData?.id,
+                      "Room number copy to clipboard"
+                    )
+                  }
                 >
                   <FaCopy className="text-primary text-xl" />
                 </div>
@@ -194,6 +195,14 @@ export default function WaitingRoomComponent({ id }: { id: number | null }) {
                   Share your room number with a friend to start a game.
                 </p>
               </div>
+              {roomData && (
+                <span className="text-base mb-1 font-normal text-gray-50 flex items-center">
+                  Level:{" "}
+                  <span className="rounded p-1 text-gray-50 text-sm ml-1 bg-blue-600 flex items-center gap-2">
+                    {getRoomLevelText(roomData.level)}
+                  </span>
+                </span>
+              )}
               <span className="text-base font-normal text-gray-50 flex items-center">
                 Status:{" "}
                 <span className="rounded p-1 text-gray-400 flex items-center gap-2">
