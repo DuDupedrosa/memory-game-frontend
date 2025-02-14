@@ -30,6 +30,7 @@ import Coruja from "@/assets/img/board-game-animals/coruja-min.png";
 import Lontra from "@/assets/img/board-game-animals/lontra-min.png";
 import Arara from "@/assets/img/board-game-animals/arara-min.png";
 import { LevelEnum, LevelEnumType } from "@/helpers/enum/levelEnum";
+import { getRoomLevelText } from "@/helpers/getRoomLevel";
 
 const animal_level_1_imgs: CardImage[] = [
   {
@@ -618,6 +619,12 @@ export default function GameBoard({
         {/* card inicial com placar e dem que é a vez */}
         <div className="w-64 mx-auto mb-12 mt-5 p-4 bg-purple-900 text-purple-300 border-4 border-purple-500 rounded-lg shadow-lg text-center">
           <h2 className="text-lg font-bold mb-2">Placar</h2>
+          {roomData && (
+            <h3 className="text-sm font-semibold text-purple-200 bg-purple-800 px-2 py-1 rounded-md inline-block mb-2">
+              {getRoomLevelText(roomData.level)}
+            </h3>
+          )}
+
           <div className="flex justify-between">
             <div className="flex-1 flex flex-col items-center">
               <span className="font-mono text-sm">(You)</span>
@@ -650,6 +657,7 @@ export default function GameBoard({
           <div
             className="grid gap-2 sm:gap-3 md:gap-5 mx-auto w-full px-2 sm:px-5"
             style={{
+              cursor: flipCardLoading ? "progress" : "initial",
               gridTemplateColumns: `repeat(auto-fit, minmax(90px, 1fr))`, // Mantém múltiplas colunas em qualquer situação
               maxWidth:
                 images.length > 20
@@ -663,7 +671,10 @@ export default function GameBoard({
               <div
                 onClick={() => handleFlipCard(i)}
                 key={i}
-                className="relative aspect-square w-full max-w-[110px] md:max-w-[140px] rounded-lg cursor-pointer shadow-lg"
+                style={{
+                  cursor: flipCardLoading ? "progress" : "pointer",
+                }}
+                className={`relative aspect-square w-full max-w-[110px] md:max-w-[140px] rounded-lg shadow-lg`}
               >
                 {/* Parte de trás da carta */}
                 <div
