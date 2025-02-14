@@ -13,7 +13,7 @@ import {
 import { RoomDataType } from "@/types/room";
 import { UserDataType } from "@/types/user";
 import { Loader2, Trash2 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FaCopy } from "react-icons/fa6";
 import { FaInfoCircle } from "react-icons/fa";
 import { toast } from "sonner";
@@ -22,6 +22,11 @@ import DialogConfirmExitRoom from "./DialogConfirmExitRoom";
 import DialogRemoveUser from "./DialogRemoveUser";
 
 export default function WaitingRoomComponent({ id }: { id: number | null }) {
+  // Criar refs com um valor inicial vazio, mas sem null
+  const readyToPlaySound = useRef<HTMLAudioElement>(
+    new Audio("/sounds/ready-to-play.mp3")
+  );
+
   const [loadingRoomUsers, setLoadingRoomUsers] = useState<boolean>(false);
   const [userLocal, setUserLocal] = useState<UserDataType | null>(null);
   const [roomUsers, setRoomUsers] = useState<UserDataType[] | []>([]);
@@ -39,6 +44,15 @@ export default function WaitingRoomComponent({ id }: { id: number | null }) {
       .writeText(room.toString())
       .then(() => toast.success("Room number copy to clipboard"))
       .catch(() => toast.error("Erro copy room number! try again."));
+  }
+
+  function playSound(audioRef: React.RefObject<HTMLAudioElement>) {
+    if (audioRef.current) {
+      audioRef.current.currentTime = 0; // Reinicia o som para evitar delays
+      audioRef.current
+        .play()
+        .catch((err) => console.error("Erro ao reproduzir o áudio:", err));
+    }
   }
 
   async function fetchRoomUsers(room_id?: number) {
@@ -81,6 +95,7 @@ export default function WaitingRoomComponent({ id }: { id: number | null }) {
   }
 
   useEffect(() => {
+    readyToPlaySound.current.volume = 0.5;
     const user = getUserLocal();
     if (user) {
       setUserLocal(user);
@@ -102,6 +117,7 @@ export default function WaitingRoomComponent({ id }: { id: number | null }) {
       const user = getUserLocal();
 
       if (user) {
+        playSound(readyToPlaySound);
         // alertando o dono da sala que ele poder começar o jogo
         if (user.id === data.ownerId) {
           toast.success("Player two confirm! You free to start a game.");

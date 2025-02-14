@@ -259,6 +259,17 @@ export default function GameBoard({
   // Criar refs com um valor inicial vazio, mas sem null
   const winSound = useRef<HTMLAudioElement>(new Audio("/sounds/win.mp3"));
   const loseSound = useRef<HTMLAudioElement>(new Audio("/sounds/lose.mp3"));
+  const flippedCardSound = useRef<HTMLAudioElement>(
+    new Audio("/sounds/flipcard.mp3")
+  );
+  const wrongSound = useRef<HTMLAudioElement>(new Audio("/sounds/wrong.mp3"));
+  const correctSound = useRef<HTMLAudioElement>(
+    new Audio("/sounds/correct.mp3")
+  );
+  const gameStartSound = useRef<HTMLAudioElement>(
+    new Audio("/sounds/game-start.mp3")
+  );
+  // end audios
 
   const [roomData, setRoomData] = useState<RoomDataType | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -333,7 +344,7 @@ export default function GameBoard({
       if (!user) return;
 
       setIsPlayerTurn(playerId === user.id);
-
+      playSound(wrongSound);
       setTimeout(() => {
         const payload = imagesRef.current.map((image) => {
           if (image.isFlipped) image.isFlipped = false;
@@ -398,7 +409,7 @@ export default function GameBoard({
         return image;
       });
       setImages([...newImages]);
-
+      playSound(flippedCardSound);
       const flippedImages = newImages.filter((image) => image.isFlipped);
 
       if (flippedImages && flippedImages.length === 2) {
@@ -455,6 +466,7 @@ export default function GameBoard({
   ) {
     const user = getUserLocal();
     if (!user) return;
+    playSound(correctSound);
     const winPlayer = scores.find((score) => score.value === victoryPoint);
 
     if (winPlayer) {
@@ -523,6 +535,7 @@ export default function GameBoard({
 
   useEffect(() => {
     if (!roomData || !roomData.level || images.length > 0) return;
+    playSound(gameStartSound);
     const imagesToShuffle = getImagesToShuffle(roomData.level);
 
     const shuffledImages = shuffleArray(
@@ -591,6 +604,10 @@ export default function GameBoard({
   useEffect(() => {
     winSound.current.volume = 0.5;
     loseSound.current.volume = 0.5;
+    flippedCardSound.current.volume = 0.5;
+    wrongSound.current.volume = 0.5;
+    correctSound.current.volume = 0.5;
+    gameStartSound.current.volume = 0.5;
     setImages([]);
   }, []);
 
