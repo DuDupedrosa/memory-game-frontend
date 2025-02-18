@@ -7,3 +7,11 @@ export type RoomDataType = {
   matchRandomNumber: number;
   level: number;
 };
+
+export type RoomToSettings = {
+  id: number;
+  level: number;
+  password: string;
+  lastAccess: string;
+  createdAt: string;
+};
