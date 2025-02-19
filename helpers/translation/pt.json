@@ -104,5 +104,7 @@
   "delete_room_success": "Sala excluída com sucesso",
   "join_room": "Acessar sala",
   "not_have_rooms_title": "Parece que está vazio por aqui...",
-  "not_have_rooms_subtitle": "Crie a primeira sala e desafie alguém para jogar!"
+  "not_have_rooms_subtitle": "Crie a primeira sala e desafie alguém para jogar!",
+  "user_not_room_owner": "O ID do usuário não corresponde ao dono da sala.",
+  "limit_room_for_user": "Você atingiu o limite de 3 salas por usuário. Exclua uma sala existente para criar uma nova."
 }
