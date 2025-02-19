@@ -83,6 +83,8 @@ export default function SettingsComponent() {
 
       if (data.content && data.content.length > 0) {
         setUserHasRegisterRooms(true);
+      } else {
+        setUserHasRegisterRooms(false);
       }
     } catch (err) {}
     setLoading(false);
@@ -98,9 +100,10 @@ export default function SettingsComponent() {
     await fetchRooms();
   }
 
-  function handleSuccessDeleteRoom() {
+  async function handleSuccessDeleteRoom() {
     setRoomIdToDelete(0);
     setOpenDialogDeleteRoom(false);
+    await fetchRooms();
   }
 
   function handleEditRoom(room: RoomToSettings) {

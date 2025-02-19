@@ -32,9 +32,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 function NewPassword({
   onSuccess,
   onClose,
+  roomId,
 }: {
   onSuccess: () => void;
   onClose: () => void;
+  roomId: number;
 }) {
   const [loading, setLoading] = useState<boolean>(false);
   const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -57,8 +59,9 @@ function NewPassword({
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setLoading(true);
     try {
-      let payload = {
-        password: values.password,
+      let payload: { id: number; newPassword: string } = {
+        id: roomId,
+        newPassword: values.password,
       };
       await apiService.patch("room/change-password", payload);
       toast.success(ptJson.update_room_password_success);
@@ -146,10 +149,12 @@ function NewLevel({
   onSuccess,
   onClose,
   currentLevel,
+  roomId,
 }: {
   onSuccess: () => void;
   onClose: () => void;
   currentLevel: number;
+  roomId: number;
 }) {
   const [loading, setLoading] = useState<boolean>(false);
   const [valueLoading, setValueLoading] = useState<boolean>(true);
@@ -181,7 +186,8 @@ function NewLevel({
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setLoading(true);
     try {
-      let payload = {
+      let payload: { id: number; level: number } = {
+        id: roomId,
         level: Number(values.level),
       };
       await apiService.patch("room/change-level", payload);
@@ -338,6 +344,7 @@ export default function DialogEdit({
               </TabsList>
               <TabsContent value="level">
                 <NewLevel
+                  roomId={dataToEdit.id}
                   currentLevel={dataToEdit.level}
                   onSuccess={() => onSuccess()}
                   onClose={() => onClose()}
@@ -345,6 +352,7 @@ export default function DialogEdit({
               </TabsContent>
               <TabsContent value="password">
                 <NewPassword
+                  roomId={dataToEdit.id}
                   onSuccess={() => onSuccess()}
                   onClose={() => onClose()}
                 />
