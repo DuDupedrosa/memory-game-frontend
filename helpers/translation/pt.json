@@ -101,5 +101,8 @@
   "delete_room_title": "Tem certeza de que deseja excluir a sala",
   "delete_room_alert": "Esta ação não pode ser desfeita. Ao excluir a sala, todos os dados associados a ela serão perdidos.",
   "confirm_delete": "Sim, excluir",
-  "delete_room_success": "Sala excluída com sucesso"
+  "delete_room_success": "Sala excluída com sucesso",
+  "join_room": "Acessar sala",
+  "not_have_rooms_title": "Parece que está vazio por aqui...",
+  "not_have_rooms_subtitle": "Crie a primeira sala e desafie alguém para jogar!"
 }

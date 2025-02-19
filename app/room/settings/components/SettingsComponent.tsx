@@ -5,7 +5,7 @@ import PageLoader from "@/components/PageLoader";
 import { Button } from "@/components/ui/button";
 import { copyToClipBoard } from "@/helpers/copyToClipBoard";
 import { getRoomLevelText } from "@/helpers/getRoomLevel";
-import { Pencil, Trash2 } from "lucide-react";
+import { LogIn, Pencil, Plus, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { FaCopy } from "react-icons/fa6";
 import { format } from "date-fns";
@@ -14,6 +14,8 @@ import { DialogAdd } from "./DialogAdd";
 import DialogEdit from "./DialogEdit";
 import { RoomToSettings } from "@/types/room";
 import DialogDelete from "./DialogDelete";
+import { useRouter } from "next/navigation";
+import NotHaveRooms from "./NotHaveRooms";
 
 export const eyeInputIconStyle =
   "absolute cursor-pointer right-3 top-1/2 -translate-y-1/2 text-gray-500";
@@ -69,12 +71,19 @@ export default function SettingsComponent() {
   const [openDialogDeleteRoom, setOpenDialogDeleteRoom] =
     useState<boolean>(false);
   const [roomIdToDelete, setRoomIdToDelete] = useState<number>(0);
+  const router = useRouter();
+  const [userHasRegisterRooms, setUserHasRegisterRooms] =
+    useState<boolean>(false);
 
   const fetchRooms = async () => {
     setLoading(true);
     try {
       const { data } = await apiService.get("room/get-all");
       setRooms(data.content);
+
+      if (data.content && data.content.length > 0) {
+        setUserHasRegisterRooms(true);
+      }
     } catch (err) {}
     setLoading(false);
   };
@@ -114,9 +123,8 @@ export default function SettingsComponent() {
   }, []);
   return (
     <div className="px-5 md:px-10 mt-12 pb-12">
-      {/* grid */}
       <div className="w-full lg:w-1/2 lg:mx-auto">
-        <div className="flex items-start justify-between gap-5">
+        <div className="flex flex-col sm:flex-row items-start justify-between gap-5">
           <div>
             <h1 className="text-3xl font-medium text-gray-50 mb-2">
               {ptJson.my_rooms}
@@ -125,16 +133,35 @@ export default function SettingsComponent() {
               {ptJson.my_rooms_subtitle}
             </h2>
           </div>
-          <div>
-            <Button onClick={() => setOpenDialogAddRoom(true)}>
-              Criar nova sala
-            </Button>
-          </div>
+
+          {!loading && userHasRegisterRooms && (
+            <div className="flex flex-col gap-5">
+              <Button
+                className="flex-1 min-w-[180px] flex items-center gap-1"
+                onClick={() => setOpenDialogAddRoom(true)}
+              >
+                <Plus size={20} />
+
+                {ptJson.create_room}
+              </Button>
+              <Button
+                className="bg-gray-600 flex-1  hover:bg-gray-700 transition-all flex items-center gap-2"
+                onClick={() => router.push("/room")}
+              >
+                <LogIn size={20} />
+                {ptJson.join_room}
+              </Button>
+            </div>
+          )}
         </div>
 
         {loading && <PageLoader />}
 
-        {!loading && (
+        {!loading && !userHasRegisterRooms && (
+          <NotHaveRooms createNewRoom={() => setOpenDialogAddRoom(true)} />
+        )}
+
+        {!loading && userHasRegisterRooms && (
           <div className="bg-gray-800 rounded-lg p-5 pt-0 mt-5">
             <ul>
               {rooms.map((room, i) => {
