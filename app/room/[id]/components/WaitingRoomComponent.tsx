@@ -23,6 +23,7 @@ import DialogRemoveUser from "./DialogRemoveUser";
 import { getRoomLevelText } from "@/helpers/getRoomLevel";
 import { copyToClipBoard } from "@/helpers/copyToClipBoard";
 import ptJson from "@/helpers/translation/pt.json";
+import { Badge } from "@/components/ui/badge";
 
 export default function WaitingRoomComponent({ id }: { id: number | null }) {
   // Criar refs com um valor inicial vazio, mas sem null
@@ -173,14 +174,15 @@ export default function WaitingRoomComponent({ id }: { id: number | null }) {
                   </span>
                 </div>
 
-                <div
+                <button
+                  title={ptJson.copy_room_id}
                   className="p-1 cursor-pointer"
                   onClick={() =>
                     copyToClipBoard(roomData?.id, ptJson.id_copied)
                   }
                 >
                   <FaCopy className="text-primary text-xl" />
-                </div>
+                </button>
               </div>
             </CardTitle>
             <CardDescription>
@@ -192,9 +194,9 @@ export default function WaitingRoomComponent({ id }: { id: number | null }) {
               {roomData && (
                 <span className="text-base mb-1 font-normal text-gray-50 flex items-center">
                   {ptJson.difficulty_level}:{" "}
-                  <span className="rounded p-1 text-gray-50 text-sm ml-1 bg-blue-600 flex items-center gap-2">
+                  <Badge className="ml-2 bg-blue-600 hover:bg-blue-700">
                     {getRoomLevelText(roomData.level)}
-                  </span>
+                  </Badge>
                 </span>
               )}
               <span className="text-base font-normal text-gray-50 flex items-center">

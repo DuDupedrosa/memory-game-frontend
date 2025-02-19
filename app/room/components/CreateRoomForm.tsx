@@ -94,30 +94,33 @@ export default function CreateRoomComponent() {
                       <RadioGroup
                         onValueChange={field.onChange}
                         defaultValue={field.value}
-                        className="flex items-center gap-5"
+                        className="flex flex-col min-[964px]:flex-row min-[964px]:items-center gap-5"
                       >
                         <FormItem className="flex items-center space-x-3 space-y-0">
                           <FormControl>
                             <RadioGroupItem value={String(LevelEnum.EASY)} />
                           </FormControl>
-                          <FormLabel className="font-normal text-gray-50">
-                            {ptJson.difficulty_easy}
+                          <FormLabel className="font-normal text-gray-50 flex flex-col gap-1">
+                            <span>{ptJson.easy}</span>
+                            <span>{ptJson.difficulty_easy}</span>
                           </FormLabel>
                         </FormItem>
                         <FormItem className="flex items-center space-x-3 space-y-0">
                           <FormControl>
                             <RadioGroupItem value={String(LevelEnum.MEDIUM)} />
                           </FormControl>
-                          <FormLabel className="font-normal text-gray-50">
-                            {ptJson.difficulty_medium}
+                          <FormLabel className="font-normal text-gray-50 flex flex-col gap-1">
+                            <span>{ptJson.medium}</span>
+                            <span>{ptJson.difficulty_medium}</span>
                           </FormLabel>
                         </FormItem>
                         <FormItem className="flex items-center space-x-3 space-y-0">
                           <FormControl>
                             <RadioGroupItem value={String(LevelEnum.HARD)} />
                           </FormControl>
-                          <FormLabel className="font-normal text-gray-50">
-                            {ptJson.difficulty_hard}
+                          <FormLabel className="font-normal text-gray-50 flex flex-col gap-1">
+                            <span>{ptJson.hard}</span>
+                            <span>{ptJson.difficulty_hard}</span>
                           </FormLabel>
                         </FormItem>
                       </RadioGroup>

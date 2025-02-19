@@ -106,5 +106,15 @@
   "not_have_rooms_title": "Parece que está vazio por aqui...",
   "not_have_rooms_subtitle": "Crie a primeira sala e desafie alguém para jogar!",
   "user_not_room_owner": "O ID do usuário não corresponde ao dono da sala.",
-  "limit_room_for_user": "Você atingiu o limite de 3 salas por usuário. Exclua uma sala existente para criar uma nova."
+  "limit_room_for_user": "Você atingiu o limite de 3 salas por usuário. Exclua uma sala existente para criar uma nova.",
+  "delete_room": "Deletar sala",
+  "copy_room_id": "Copiar ID da sala",
+  "copy_room_password": "Copiar senha da sala",
+  "hello": "Olá",
+  "hello_player": "Olá, jogador!",
+  "menu_description": "Use o menu para navegar pelo jogo e acessar suas opções.",
+  "logout": "Encerrar sessão",
+  "play": "Jogar",
+  "rooms": "Salas",
+  "profile": "Perfil"
 }

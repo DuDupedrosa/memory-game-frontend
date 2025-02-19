@@ -16,6 +16,7 @@ import { RoomToSettings } from "@/types/room";
 import DialogDelete from "./DialogDelete";
 import { useRouter } from "next/navigation";
 import NotHaveRooms from "./NotHaveRooms";
+import { Badge } from "@/components/ui/badge";
 
 export const eyeInputIconStyle =
   "absolute cursor-pointer right-3 top-1/2 -translate-y-1/2 text-gray-500";
@@ -28,9 +29,13 @@ function RoomIdRow({ id }: { id: number }) {
     <div className="flex items-center gap-2">
       <span className="block text-xl text-gray-50">{ptJson.room_id}:</span>
       <span className="text-xl font-semibold text-gray-400">{id}</span>
-      <div className="p-1 cursor-pointer" onClick={() => copyToClipBoard(id)}>
+      <button
+        title={ptJson.copy_room_id}
+        className="p-1 cursor-pointer"
+        onClick={() => copyToClipBoard(id)}
+      >
         <FaCopy className="text-primary text-xl" />
-      </div>
+      </button>
     </div>
   );
 }
@@ -49,12 +54,29 @@ function RoomPasswordRow({ password }: { password: string }) {
     <div className="flex items-center gap-2">
       <span className="block text-gray-50 text-base">{ptJson.password}:</span>
       <span className="block text-gray-400 font-semibold">******</span>
-      <div
+      <button
+        title={ptJson.copy_room_password}
         className="p-1 cursor-pointer"
         onClick={() => copyToClipBoard(password)}
       >
         <FaCopy className="text-primary text-xl" />
-      </div>
+      </button>
+    </div>
+  );
+}
+
+function RoomLevelRow({ level }: { level: number }) {
+  return (
+    <div className="flex items-center gap-2">
+      <span className="block text-gray-50 text-base">
+        {ptJson.difficulty_level}:
+      </span>
+      <Badge
+        variant={"secondary"}
+        className="bg-gray-600 hover:bg-gray-700 text-gray-300"
+      >
+        {getRoomLevelText(level)}
+      </Badge>
     </div>
   );
 }
@@ -175,10 +197,8 @@ export default function SettingsComponent() {
                   >
                     <div className="flex flex-col gap-3">
                       <RoomIdRow id={room.id} />
-                      <RoomDefaultRow
-                        value={getRoomLevelText(room.level)}
-                        label={ptJson.difficulty_level}
-                      />
+                      <RoomLevelRow level={room.level} />
+
                       <RoomDefaultRow
                         value={format(
                           new Date(room.createdAt),
@@ -200,12 +220,14 @@ export default function SettingsComponent() {
                     {/* actions buttons */}
                     <div className="flex items-center gap-3 mt-3 sm:mt-0 sm:absolute sm:top-5 right-0">
                       <Button
+                        title={ptJson.edit_room}
                         onClick={() => handleEditRoom(room)}
                         className="bg-green-600 w-10 h-10 hover:bg-green-800"
                       >
                         <Pencil className="text-gray-50" size={22} />
                       </Button>
                       <Button
+                        title={ptJson.delete_room}
                         onClick={() => handleDeleteRoom(room.id)}
                         className="bg-red-600 w-10 h-10 hover:bg-red-800"
                       >

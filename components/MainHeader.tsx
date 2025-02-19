@@ -15,14 +15,10 @@ import { toast } from "sonner";
 import Image from "next/image";
 import Logo from "@/assets/icons/memory-game-logo.svg";
 import DialogConfirmExitRoom from "@/app/room/[id]/components/DialogConfirmExitRoom";
+import SheetMenu from "./SheetMenu";
+import ptJson from "@/helpers/translation/pt.json";
 
-export default function MainHeader({
-  showLogo,
-  isGameBoard,
-}: {
-  showLogo?: boolean;
-  isGameBoard?: boolean;
-}) {
+export default function MainHeader({ isGameBoard }: { isGameBoard?: boolean }) {
   const router = useRouter();
   const [nickName, setNickName] = useState<string | null>(null);
   const [avatar, setAvatar] = useState<string | null>(null);
@@ -60,7 +56,7 @@ export default function MainHeader({
   return (
     <div className="w-full h-28 sm:h-24 bg-gray-800 border-b-solid border-b-2 border-b-purple-800">
       <div className="flex items-center justify-between h-full px-5">
-        {showLogo && (
+        {isGameBoard && (
           <div>
             <Image
               className="w-20 h-20 rounded"
@@ -70,7 +66,9 @@ export default function MainHeader({
           </div>
         )}
 
-        <div className="flex flex-col sm:flex-row items-center gap-5">
+        {!isGameBoard && <SheetMenu logout={() => handleLogout()} />}
+
+        <div className="flex flex-col sm:flex-row items-center">
           <div>
             {isGameBoard && (
               <div>
@@ -79,9 +77,9 @@ export default function MainHeader({
                     setDialogConfirmExitRoom(true);
                     setDialogIsLoggedOut(false);
                   }}
-                  className="bg-red-600 hover:bg-red-800 transition-all text-gray-50"
+                  className="bg-red-600 hover:bg-red-800 transition-all text-gray-50 mr-5 mb-2"
                 >
-                  Sair do jogo
+                  {ptJson.exit_room}
                 </Button>
               </div>
             )}
@@ -113,7 +111,7 @@ export default function MainHeader({
                 >
                   <MdLogout className="text-xl text-gray-400" />
                   <span className="text-gray-50 text-sm font-normal block">
-                    Encerrar sessão
+                    {ptJson.logout}
                   </span>
                 </li>
               </ul>

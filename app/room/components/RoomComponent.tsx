@@ -22,7 +22,7 @@ export const iconInputStyle =
 
 export default function RoomComponent() {
   return (
-    <div className="w-full  min-h-screen h-full bg-gray-900">
+    <div className="w-full py-5  min-h-screen h-full bg-gray-900">
       <div className="min-h-screen flex flex-col justify-center items-center px-5 md:px-0">
         <Card className="w-full md:w-1/2 xl:w-[30%] min-h-[50vh] bg-gray-800 border-purple-800 shadow-none">
           <CardHeader className="">

@@ -23,8 +23,10 @@ import { handleRequestApiErro } from "@/helpers/handleRequestApiErro";
 import { eyeInputIconStyle, iconInputStyle } from "./RoomComponent";
 import { getRoomLevelText } from "@/helpers/getRoomLevel";
 import { copyToClipBoard } from "@/helpers/copyToClipBoard";
-import { FaCircleInfo } from "react-icons/fa6";
+import { FaCopy } from "react-icons/fa6";
 import ptJson from "@/helpers/translation/pt.json";
+import { FaEdit } from "react-icons/fa";
+import { Badge } from "@/components/ui/badge";
 
 const formSchema = z.object({
   id: z.number().min(1, { message: ptJson.required_field }),
@@ -169,28 +171,37 @@ export default function SignInRoomComponent() {
           <span className="block text-base font-medium text-gray-50">
             {ptJson.my_recent_rooms}:
           </span>
-          <span className="flex items-center my-1 gap-2">
-            <FaCircleInfo className="text-xs text-blue-600" />
-            <span className="text-gray-400 text-xs">
-              {ptJson.click_to_copy}
-            </span>
-          </span>
           <ul className="flex flex-col gap-3 mt-3">
             {rooms.map((room, i) => {
               return (
-                <li
-                  onClick={() => copyToClipBoard(room.id, ptJson.id_copied)}
-                  key={i}
-                  className="flex items-center cursor-pointer gap-2 rounded p-1 hover:bg-gray-700"
-                >
+                <li key={i} className="flex items-center gap-3 rounded p-1">
                   <span className="w-2 h-2 bg-green-600 rounded-full block"></span>
                   <span className="text-base text-gray-400 font-bold flex items-center">
                     {ptJson.room}:{" "}
                     <span className="ml-2 text-primary">{room.id}</span>{" "}
-                    <span className="rounded ml-5 block text-sm w-[45px] p-1 bg-gray-600 text-gray-400">
+                    <Badge
+                      variant={"secondary"}
+                      className="ml-3 bg-gray-600 hover:bg-gray-700 text-gray-300"
+                    >
                       {getRoomLevelText(room.level)}
-                    </span>
+                    </Badge>
                   </span>
+                  <div className="flex gap-2 flex-wrap ml-auto">
+                    <Button
+                      onClick={() => copyToClipBoard(room.id, ptJson.id_copied)}
+                      className="bg-gray-700 w-8 sm:w-12 h-8 text-gray-400 rounded hover:bg-gray-600"
+                      title={ptJson.copy_room_id}
+                    >
+                      <FaCopy className="text-lg" />
+                    </Button>
+                    <Button
+                      onClick={() => router.push("/room/settings")}
+                      className="bg-gray-700 w-8 sm:w-12 h-8 text-gray-400 rounded hover:bg-gray-600"
+                      title={ptJson.edit_room}
+                    >
+                      <FaEdit className="text-lg" />
+                    </Button>
+                  </div>
                 </li>
               );
             })}
