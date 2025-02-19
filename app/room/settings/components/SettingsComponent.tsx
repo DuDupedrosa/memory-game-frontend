@@ -17,6 +17,8 @@ import DialogDelete from "./DialogDelete";
 import { useRouter } from "next/navigation";
 import NotHaveRooms from "./NotHaveRooms";
 import { Badge } from "@/components/ui/badge";
+import MainPageTitle from "@/components/MainPageTitle";
+import MainPageSubtitle from "@/components/MainPageSubtitle";
 
 export const eyeInputIconStyle =
   "absolute cursor-pointer right-3 top-1/2 -translate-y-1/2 text-gray-500";
@@ -151,12 +153,9 @@ export default function SettingsComponent() {
       <div className="w-full lg:w-1/2 lg:mx-auto">
         <div className="flex flex-col sm:flex-row items-start justify-between gap-5">
           <div>
-            <h1 className="text-3xl font-medium text-gray-50 mb-2">
-              {ptJson.my_rooms}
-            </h1>
-            <h2 className="block text-lg font-normal text-gray-400">
-              {ptJson.my_rooms_subtitle}
-            </h2>
+            <MainPageTitle text={ptJson.my_rooms} />
+
+            <MainPageSubtitle text={ptJson.my_rooms_subtitle} />
           </div>
 
           {!loading && userHasRegisterRooms && (
