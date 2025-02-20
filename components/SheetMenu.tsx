@@ -19,6 +19,8 @@ import { useEffect, useState } from "react";
 import { UserDataType } from "@/types/user";
 import { getUserLocal } from "@/helpers/getUserLoca";
 import ptJson from "@/helpers/translation/pt.json";
+import Image from "next/image";
+import LogoMenu from "@/assets/img/logo-menu.png";
 
 const menuItems = [
   { href: "/room", icon: FaGamepad, label: ptJson.play },
@@ -42,6 +44,11 @@ export default function SheetMenu({ logout }: { logout: () => void }) {
       </SheetTrigger>
       <SheetContent className="bg-gray-800 flex flex-col h-full" side="left">
         <SheetHeader className="border-b border-gray-400 pb-5">
+          <Image
+            className="w-[220px] h-16 rounded"
+            src={LogoMenu}
+            alt="memory-game"
+          />
           <SheetTitle className="text-gray-50 text-start text-xl font-medium">
             {user ? `${ptJson.hello}, ${user.nickName}` : ptJson.hello_player}
           </SheetTitle>

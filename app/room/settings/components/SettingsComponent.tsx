@@ -19,12 +19,22 @@ import NotHaveRooms from "./NotHaveRooms";
 import { Badge } from "@/components/ui/badge";
 import MainPageTitle from "@/components/MainPageTitle";
 import MainPageSubtitle from "@/components/MainPageSubtitle";
+import { BreadCrumbType } from "@/types/breadCrumb";
+import BreadCrumb from "@/components/BreadCrumb";
 
 export const eyeInputIconStyle =
   "absolute cursor-pointer right-3 top-1/2 -translate-y-1/2 text-gray-500";
 
 export const iconInputStyle =
   "absolute  left-3 top-1/2 -translate-y-1/2 text-gray-500";
+
+const breadCrumbItems: BreadCrumbType[] = [
+  {
+    label: ptJson.rooms,
+    current: true,
+    toPath: "/room/settings",
+  },
+];
 
 function RoomIdRow({ id }: { id: number }) {
   return (
@@ -151,6 +161,8 @@ export default function SettingsComponent() {
   return (
     <div className="px-5 md:px-10 mt-12 pb-12">
       <div className="w-full lg:w-1/2 lg:mx-auto">
+        <BreadCrumb routes={breadCrumbItems} />
+
         <div className="flex flex-col sm:flex-row items-start justify-between gap-5">
           <div>
             <MainPageTitle text={ptJson.my_rooms} />

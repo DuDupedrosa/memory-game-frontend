@@ -7,6 +7,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import BasicData from "./BasicData";
 import { Card } from "@/components/ui/card";
 import ChangePassword from "./ChangePassword";
+import BreadCrumb from "@/components/BreadCrumb";
+import { BreadCrumbType } from "@/types/breadCrumb";
 
 export const iconInputStyle =
   "absolute  left-3 top-1/2 -translate-y-1/2 text-gray-500";
@@ -14,10 +16,20 @@ export const iconInputStyle =
 export const eyeInputIconStyle =
   "absolute cursor-pointer right-3 top-1/2 -translate-y-1/2 text-gray-500";
 
+const breadCrumbItems: BreadCrumbType[] = [
+  {
+    label: ptJson.profile,
+    current: true,
+    toPath: "/profile",
+  },
+];
+
 export default function ProfileComponent() {
   return (
     <div className="px-5 md:px-10 mt-12 pb-12">
       <div className="w-full lg:w-1/2 lg:mx-auto">
+        <BreadCrumb routes={breadCrumbItems} />
+
         {/* header */}
         <div>
           <div>
