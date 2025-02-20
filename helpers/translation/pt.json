@@ -124,5 +124,7 @@
   "my_profile": "Meu perfil",
   "choose_option_update_profile": "Selecione uma das opções abaixo para editar seu perfil",
   "personal_data": "Informações Pessoais",
-  "change_password": "Alterar senha"
+  "change_password": "Alterar senha",
+  "updated_password_success": "Senha alterada com sucesso! Faça login novamente para continuar.",
+  "current_password": "Senha atual"
 }

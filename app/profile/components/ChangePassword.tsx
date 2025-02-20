@@ -17,10 +17,9 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { UserDataType } from "@/types/user";
-import PageLoader from "@/components/PageLoader";
 import { eyeInputIconStyle, iconInputStyle } from "./ProfileComponent";
 import { Eye, EyeOff, Key, Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   newPassword: z.string().min(6, { message: ptJson.password_min_length }),
@@ -28,12 +27,11 @@ const formSchema = z.object({
 });
 
 export default function ChangePassword() {
-  const [loading, setLoading] = useState<boolean>(false);
-  const [user, setUser] = useState<UserDataType | null>(null);
   const [submitLoading, setSubmitLoading] = useState<boolean>(false);
   const [showCurrentPassword, setShowCurrentPassword] =
     useState<boolean>(false);
   const [showNewPassword, setShowNewPassword] = useState<boolean>(false);
+  const router = useRouter();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -53,8 +51,9 @@ export default function ChangePassword() {
     try {
       const payload = { ...values };
       await apiService.patch("user/change-password", payload);
-      toast.success("Senha alterada com sucesso");
-      resetForm();
+      toast.success(ptJson.updated_password_success);
+      window.localStorage.clear();
+      router.push("/auth");
     } catch (err) {
       handleRequestApiErro(err);
     }
@@ -77,7 +76,7 @@ export default function ChangePassword() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel htmlFor="password" className="text-gray-400">
-                      Senha atual
+                      {ptJson.current_password}
                     </FormLabel>
                     <FormControl>
                       <div className="relative w-full">
@@ -118,8 +117,8 @@ export default function ChangePassword() {
                 name="newPassword"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel htmlFor="password" className="text-gray-400">
-                      Nova senha
+                    <FormLabel htmlFor="newPassword" className="text-gray-400">
+                      {ptJson.new_password}
                     </FormLabel>
                     <FormControl>
                       <div className="relative w-full">
@@ -137,7 +136,7 @@ export default function ChangePassword() {
                         )}
                         <Key className={iconInputStyle} />
                         <Input
-                          id="password"
+                          id="newPassword"
                           type={showNewPassword ? "text" : "password"}
                           {...field}
                           className="pr-10 pl-10 text-gray-50"
@@ -158,7 +157,7 @@ export default function ChangePassword() {
             type="submit"
           >
             {submitLoading && <Loader2 className="animate-spin" />}
-            Salvar nova senha
+            {ptJson.save_new_password}
           </Button>
         </form>
       </Form>
