@@ -118,5 +118,11 @@
   "rooms": "Salas",
   "profile": "Perfil",
   "wrong_current_password": "Senha atual incorreta",
-  "new_password_is_the_same_current_password": "A nova senha não pode ser igual à senha atual. Por favor, escolha uma senha diferente."
+  "new_password_is_the_same_current_password": "A nova senha não pode ser igual à senha atual. Por favor, escolha uma senha diferente.",
+  "updated_info_success": "As informações foram atualizadas com sucesso.",
+  "update_info": "Atualizar informações",
+  "my_profile": "Meu perfil",
+  "choose_option_update_profile": "Selecione uma das opções abaixo para editar seu perfil",
+  "personal_data": "Informações Pessoais",
+  "change_password": "Alterar senha"
 }

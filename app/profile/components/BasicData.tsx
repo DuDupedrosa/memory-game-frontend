@@ -57,7 +57,7 @@ export default function BasicData() {
     try {
       const payload = { ...values };
       await apiService.put("user", payload);
-      toast.success("Informações atualizadas com sucesso");
+      toast.success(ptJson.updated_info_success);
       await fetchUser();
     } catch (err) {
       handleRequestApiErro(err);
@@ -145,7 +145,7 @@ export default function BasicData() {
               type="submit"
             >
               {submitLoading && <Loader2 className="animate-spin" />}
-              Atualizar informações
+              {ptJson.update_info}
             </Button>
           </form>
         </Form>

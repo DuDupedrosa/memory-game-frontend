@@ -21,8 +21,8 @@ export default function ProfileComponent() {
         {/* header */}
         <div>
           <div>
-            <MainPageTitle text="Meu perfil" />
-            <MainPageSubtitle text="Escolha uma opção abaixo para editar seu perfil" />
+            <MainPageTitle text={ptJson.my_profile} />
+            <MainPageSubtitle text={ptJson.choose_option_update_profile} />
           </div>
         </div>
 
@@ -33,13 +33,13 @@ export default function ProfileComponent() {
                 value="basicData"
                 className="flex-1 data-[state=active]:bg-gray-500 data-[state=active]:text-white font-medium text-gray-50"
               >
-                Dados básicos
+                {ptJson.personal_data}
               </TabsTrigger>
               <TabsTrigger
                 value="newPassword"
                 className="flex-1 data-[state=active]:bg-gray-500 data-[state=active]:text-white font-medium text-gray-50"
               >
-                Mudar senha
+                {ptJson.change_password}
               </TabsTrigger>
             </TabsList>
             <TabsContent value="basicData">
