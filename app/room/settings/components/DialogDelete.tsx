@@ -29,16 +29,17 @@ export default function DialogDelete({
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   async function handleDeleteRoom() {
-    setLoading(true);
     try {
+      setLoading(true);
       if (!id) return;
       await apiService.delete(`room/${id}`);
       toast.success(ptJson.delete_room_success);
       onSuccess();
     } catch (err) {
       handleRequestApiErro(err);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   }
 
   useEffect(() => {
