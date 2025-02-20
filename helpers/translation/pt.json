@@ -116,5 +116,7 @@
   "logout": "Encerrar sessão",
   "play": "Jogar",
   "rooms": "Salas",
-  "profile": "Perfil"
+  "profile": "Perfil",
+  "wrong_current_password": "Senha atual incorreta",
+  "new_password_is_the_same_current_password": "A nova senha não pode ser igual à senha atual. Por favor, escolha uma senha diferente."
 }
