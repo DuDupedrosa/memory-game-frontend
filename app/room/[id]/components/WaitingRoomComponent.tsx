@@ -174,23 +174,27 @@ export default function WaitingRoomComponent({ id }: { id: number | null }) {
                   </span>
                 </div>
 
-                <button
-                  title={ptJson.copy_room_id}
-                  className="p-1 cursor-pointer"
-                  onClick={() =>
-                    copyToClipBoard(roomData?.id, ptJson.id_copied)
-                  }
-                >
-                  <FaCopy className="text-primary text-xl" />
-                </button>
+                {roomData && roomData.ownerId === userLocal?.id && (
+                  <button
+                    title={ptJson.copy_room_id}
+                    className="p-1 cursor-pointer"
+                    onClick={() =>
+                      copyToClipBoard(roomData?.id, ptJson.id_copied)
+                    }
+                  >
+                    <FaCopy className="text-primary text-xl" />
+                  </button>
+                )}
               </div>
             </CardTitle>
             <CardDescription>
-              <div className="grid grid-cols-[14px_1fr] items-center mt-1 md:mt-0 gap-2 mb-5">
-                <FaInfoCircle className="text-sm text-blue-600" />
+              {roomData && roomData.ownerId === userLocal?.id && (
+                <div className="grid grid-cols-[14px_1fr] items-center mt-1 md:mt-0 gap-2 mb-5">
+                  <FaInfoCircle className="text-sm text-blue-600" />
 
-                <p className="text-sm text-gray-400">{ptJson.share_room}</p>
-              </div>
+                  <p className="text-sm text-gray-400">{ptJson.share_room}</p>
+                </div>
+              )}
               {roomData && (
                 <span className="text-base mb-1 font-normal text-gray-50 flex items-center">
                   {ptJson.difficulty_level}:{" "}

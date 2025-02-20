@@ -77,7 +77,7 @@ export default function MainHeader({ isGameBoard }: { isGameBoard?: boolean }) {
                     setDialogConfirmExitRoom(true);
                     setDialogIsLoggedOut(false);
                   }}
-                  className="bg-red-600 hover:bg-red-800 transition-all text-gray-50 mr-5 mb-2"
+                  className="bg-red-600 hover:bg-red-800 transition-all text-gray-50 mr-5 mb-2 sm:mb-0"
                 >
                   {ptJson.exit_room}
                 </Button>

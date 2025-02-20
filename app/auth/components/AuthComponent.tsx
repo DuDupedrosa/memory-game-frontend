@@ -30,7 +30,7 @@ export default function AuthComponent() {
   return (
     <div className="w-full min-h-screen h-full bg-gray-100">
       <div className="flex">
-        <div className="h-full ml-auto mr-auto min-h-screen flex flex-col justify-center w-full items-end lg:w-[40%] px-5 lg:px-0 lg:pr-2">
+        <div className="h-full ml-auto mr-auto min-h-screen flex flex-col justify-center w-full items-end lg:w-[40%] px-5 lg:px-0 lg:pr-2 py-5">
           <Card className="h-full min-h-[95vh] lg:min-h-[98vh] w-full px-5 md:px-12 flex flex-col justify-center">
             <div>
               <CardHeader className="">
