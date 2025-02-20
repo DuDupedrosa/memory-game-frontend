@@ -27,6 +27,8 @@ import { FaCopy } from "react-icons/fa6";
 import ptJson from "@/helpers/translation/pt.json";
 import { FaEdit } from "react-icons/fa";
 import { Badge } from "@/components/ui/badge";
+import { DefaultAlertErroType } from "@/types/alert";
+import AlertErro from "@/components/AlertErro";
 
 const formSchema = z.object({
   id: z.number().min(1, { message: ptJson.required_field }),
@@ -38,6 +40,10 @@ export default function SignInRoomComponent() {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [rooms, setRooms] = useState<{ id: number; level: number }[] | []>([]);
+  const [alert, setAlert] = useState<DefaultAlertErroType>({
+    open: false,
+    message: "",
+  });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -48,8 +54,12 @@ export default function SignInRoomComponent() {
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    setLoading(true);
     try {
+      setAlert({
+        open: false,
+        message: "",
+      });
+      setLoading(true);
       const user = getUserLocal();
       if (!user) return;
       const payload = { ...values };
@@ -69,9 +79,17 @@ export default function SignInRoomComponent() {
         }
       });
     } catch (err) {
-      handleRequestApiErro(err);
+      const errMessage = handleRequestApiErro(err, true);
+
+      if (errMessage) {
+        setAlert({
+          open: true,
+          message: errMessage,
+        });
+      }
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   }
 
   useEffect(() => {
@@ -158,6 +176,12 @@ export default function SignInRoomComponent() {
               />
             </div>
           </div>
+
+          <AlertErro
+            open={alert.open}
+            message={alert.message}
+            onClose={() => setAlert({ open: false, message: "" })}
+          />
 
           <Button disabled={loading} className="mt-5 w-full" type="submit">
             {loading && <Loader2 className="animate-spin" />}

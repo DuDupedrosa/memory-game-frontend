@@ -28,6 +28,8 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { eyeInputIconStyle, iconInputStyle } from "./SettingsComponent";
 import { toast } from "sonner";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { DefaultAlertErroType } from "@/types/alert";
+import AlertErro from "@/components/AlertErro";
 
 function NewPassword({
   onSuccess,
@@ -40,6 +42,10 @@ function NewPassword({
 }) {
   const [loading, setLoading] = useState<boolean>(false);
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [alert, setAlert] = useState<DefaultAlertErroType>({
+    open: false,
+    message: "",
+  });
 
   const formSchema = z.object({
     password: z.string().min(3, { message: ptJson.room_password_min_length }),
@@ -57,8 +63,12 @@ function NewPassword({
   }
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    setLoading(true);
     try {
+      setAlert({
+        open: false,
+        message: "",
+      });
+      setLoading(true);
       let payload: { id: number; newPassword: string } = {
         id: roomId,
         newPassword: values.password,
@@ -68,9 +78,17 @@ function NewPassword({
       onSuccess();
       resetForm();
     } catch (err) {
-      handleRequestApiErro(err);
+      const errMessage = handleRequestApiErro(err, true);
+
+      if (errMessage) {
+        setAlert({
+          open: true,
+          message: errMessage,
+        });
+      }
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   }
 
   return (
@@ -119,6 +137,12 @@ function NewPassword({
             </div>
           </div>
 
+          <AlertErro
+            open={alert.open}
+            message={alert.message}
+            onClose={() => setAlert({ open: false, message: "" })}
+          />
+
           <div className="flex items-center gap-5 mt-12">
             <Button
               type="submit"
@@ -158,6 +182,10 @@ function NewLevel({
 }) {
   const [loading, setLoading] = useState<boolean>(false);
   const [valueLoading, setValueLoading] = useState<boolean>(true);
+  const [alert, setAlert] = useState<DefaultAlertErroType>({
+    open: false,
+    message: "",
+  });
 
   const formSchema = z.object({
     level: z.enum(
@@ -184,8 +212,12 @@ function NewLevel({
   }
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    setLoading(true);
     try {
+      setAlert({
+        open: false,
+        message: "",
+      });
+      setLoading(true);
       let payload: { id: number; level: number } = {
         id: roomId,
         level: Number(values.level),
@@ -195,9 +227,17 @@ function NewLevel({
       onSuccess();
       resetForm();
     } catch (err) {
-      handleRequestApiErro(err);
+      const errMessage = handleRequestApiErro(err, true);
+
+      if (errMessage) {
+        setAlert({
+          open: true,
+          message: errMessage,
+        });
+      }
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   }
 
   useEffect(() => {
@@ -263,6 +303,12 @@ function NewLevel({
                 />
               </div>
             </div>
+
+            <AlertErro
+              open={alert.open}
+              message={alert.message}
+              onClose={() => setAlert({ open: false, message: "" })}
+            />
 
             <div className="flex items-center gap-5 mt-12">
               <Button

@@ -25,6 +25,8 @@ import {
   iconInputStyle,
 } from "./AuthComponent";
 import ptJson from "@/helpers/translation/pt.json";
+import { DefaultAlertErroType } from "@/types/alert";
+import AlertErro from "@/components/AlertErro";
 
 const formSchema = z.object({
   nickName: z.string().min(1, { message: ptJson.required_field }),
@@ -39,6 +41,10 @@ export default function RegisterForm({ goToLogin }: { goToLogin: () => void }) {
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [alert, setAlert] = useState<DefaultAlertErroType>({
+    open: false,
+    message: "",
+  });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -50,8 +56,12 @@ export default function RegisterForm({ goToLogin }: { goToLogin: () => void }) {
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    setLoading(true);
     try {
+      setAlert({
+        open: false,
+        message: "",
+      });
+      setLoading(true);
       const payload = { ...values };
       const { data } = await apiService.post("user", payload);
       const { user, token } = data.content;
@@ -59,9 +69,17 @@ export default function RegisterForm({ goToLogin }: { goToLogin: () => void }) {
       localStorage.setItem("token", token);
       router.push("/room");
     } catch (err) {
-      handleRequestApiErro(err);
+      const errMessage = handleRequestApiErro(err, true);
+
+      if (errMessage) {
+        setAlert({
+          open: true,
+          message: errMessage,
+        });
+      }
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   }
 
   return (
@@ -146,6 +164,12 @@ export default function RegisterForm({ goToLogin }: { goToLogin: () => void }) {
               />
             </div>
           </div>
+
+          <AlertErro
+            open={alert.open}
+            message={alert.message}
+            onClose={() => setAlert({ open: false, message: "" })}
+          />
 
           <Button
             disabled={loading}

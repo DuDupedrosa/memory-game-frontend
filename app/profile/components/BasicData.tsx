@@ -21,6 +21,8 @@ import { Gamepad2, Loader2, Mail } from "lucide-react";
 import { UserDataType } from "@/types/user";
 import PageLoader from "@/components/PageLoader";
 import { iconInputStyle } from "./ProfileComponent";
+import AlertErro from "@/components/AlertErro";
+import { DefaultAlertErroType } from "@/types/alert";
 
 const formSchema = z.object({
   email: z
@@ -34,6 +36,10 @@ export default function BasicData() {
   const [loading, setLoading] = useState<boolean>(false);
   const [user, setUser] = useState<UserDataType | null>(null);
   const [submitLoading, setSubmitLoading] = useState<boolean>(false);
+  const [alert, setAlert] = useState<DefaultAlertErroType>({
+    open: false,
+    message: "",
+  });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -53,16 +59,28 @@ export default function BasicData() {
   };
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    setSubmitLoading(true);
     try {
+      setAlert({
+        open: false,
+        message: "",
+      });
+      setSubmitLoading(true);
       const payload = { ...values };
       await apiService.put("user", payload);
       toast.success(ptJson.updated_info_success);
       await fetchUser();
     } catch (err) {
-      handleRequestApiErro(err);
+      const errMessage = handleRequestApiErro(err, true);
+
+      if (errMessage) {
+        setAlert({
+          open: true,
+          message: errMessage,
+        });
+      }
+    } finally {
+      setSubmitLoading(false);
     }
-    setSubmitLoading(false);
   }
 
   useEffect(() => {
@@ -138,6 +156,12 @@ export default function BasicData() {
                 />
               </div>
             </div>
+
+            <AlertErro
+              open={alert.open}
+              message={alert.message}
+              onClose={() => setAlert({ open: false, message: "" })}
+            />
 
             <Button
               disabled={submitLoading}

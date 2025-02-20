@@ -27,6 +27,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { eyeInputIconStyle, iconInputStyle } from "./SettingsComponent";
 import { toast } from "sonner";
+import { DefaultAlertErroType } from "@/types/alert";
+import AlertErro from "@/components/AlertErro";
 
 const formSchema = z.object({
   password: z.string().min(3, { message: ptJson.room_password_min_length }),
@@ -50,6 +52,10 @@ export function DialogAdd({
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [alert, setAlert] = useState<DefaultAlertErroType>({
+    open: false,
+    message: "",
+  });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -65,8 +71,12 @@ export function DialogAdd({
   }
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    setLoading(true);
     try {
+      setAlert({
+        open: false,
+        message: "",
+      });
+      setLoading(true);
       let payload = {
         password: values.password,
         level: Number(values.level),
@@ -76,9 +86,17 @@ export function DialogAdd({
       onSuccess();
       resetForm();
     } catch (err) {
-      handleRequestApiErro(err);
+      const errMessage = handleRequestApiErro(err, true);
+
+      if (errMessage) {
+        setAlert({
+          open: true,
+          message: errMessage,
+        });
+      }
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   }
 
   useEffect(() => {
@@ -204,6 +222,12 @@ export function DialogAdd({
                     />
                   </div>
                 </div>
+
+                <AlertErro
+                  open={alert.open}
+                  message={alert.message}
+                  onClose={() => setAlert({ open: false, message: "" })}
+                />
 
                 <div className="flex items-center gap-5">
                   <Button

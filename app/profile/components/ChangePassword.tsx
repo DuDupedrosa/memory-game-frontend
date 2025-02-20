@@ -20,6 +20,8 @@ import { Button } from "@/components/ui/button";
 import { eyeInputIconStyle, iconInputStyle } from "./ProfileComponent";
 import { Eye, EyeOff, Key, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { DefaultAlertErroType } from "@/types/alert";
+import AlertErro from "@/components/AlertErro";
 
 const formSchema = z.object({
   newPassword: z.string().min(6, { message: ptJson.password_min_length }),
@@ -32,6 +34,10 @@ export default function ChangePassword() {
     useState<boolean>(false);
   const [showNewPassword, setShowNewPassword] = useState<boolean>(false);
   const router = useRouter();
+  const [alert, setAlert] = useState<DefaultAlertErroType>({
+    open: false,
+    message: "",
+  });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -47,17 +53,29 @@ export default function ChangePassword() {
   }
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    setSubmitLoading(true);
     try {
+      setAlert({
+        open: false,
+        message: "",
+      });
+      setSubmitLoading(true);
       const payload = { ...values };
       await apiService.patch("user/change-password", payload);
       toast.success(ptJson.updated_password_success);
       window.localStorage.clear();
       router.push("/auth");
     } catch (err) {
-      handleRequestApiErro(err);
+      const errMessage = handleRequestApiErro(err, true);
+
+      if (errMessage) {
+        setAlert({
+          open: true,
+          message: errMessage,
+        });
+      }
+    } finally {
+      setSubmitLoading(false);
     }
-    setSubmitLoading(false);
   }
 
   useEffect(() => {
@@ -150,6 +168,12 @@ export default function ChangePassword() {
               />
             </div>
           </div>
+
+          <AlertErro
+            open={alert.open}
+            message={alert.message}
+            onClose={() => setAlert({ open: false, message: "" })}
+          />
 
           <Button
             disabled={submitLoading}

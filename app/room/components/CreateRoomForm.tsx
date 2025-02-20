@@ -23,6 +23,8 @@ import { eyeInputIconStyle, iconInputStyle } from "./RoomComponent";
 import { LevelEnum } from "@/helpers/enum/levelEnum";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import ptJson from "@/helpers/translation/pt.json";
+import { DefaultAlertErroType } from "@/types/alert";
+import AlertErro from "@/components/AlertErro";
 
 const formSchema = z.object({
   password: z.string().min(3, { message: ptJson.room_password_min_length }),
@@ -38,6 +40,10 @@ export default function CreateRoomComponent() {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
+  const [alert, setAlert] = useState<DefaultAlertErroType>({
+    open: false,
+    message: "",
+  });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -48,8 +54,12 @@ export default function CreateRoomComponent() {
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    setLoading(true);
     try {
+      setAlert({
+        open: false,
+        message: "",
+      });
+      setLoading(true);
       const userLocal = localStorage.getItem("user");
       if (!userLocal) return;
       const user = JSON.parse(userLocal);
@@ -71,9 +81,17 @@ export default function CreateRoomComponent() {
         router.push(`/room/${data.roomId}`);
       });
     } catch (err) {
-      handleRequestApiErro(err);
+      const errMessage = handleRequestApiErro(err, true);
+
+      if (errMessage) {
+        setAlert({
+          open: true,
+          message: errMessage,
+        });
+      }
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   }
 
   return (
@@ -169,6 +187,12 @@ export default function CreateRoomComponent() {
               />
             </div>
           </div>
+
+          <AlertErro
+            open={alert.open}
+            message={alert.message}
+            onClose={() => setAlert({ open: false, message: "" })}
+          />
 
           <Button disabled={loading} className="mt-5 w-full" type="submit">
             {loading && <Loader2 className="animate-spin" />}
