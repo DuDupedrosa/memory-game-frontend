@@ -450,7 +450,7 @@ export default function GameBoard({
   async function handleWin(winnerId: string) {
     const user = getUserLocal();
     if (!user) return;
-
+    setFlipCardLoading(false);
     // jogador ganhou
     if (winnerId === user.id) {
       setDialogWinOrLose({
@@ -490,7 +490,10 @@ export default function GameBoard({
 
     setRoundScore(roundScore ? roundScore.value : 0);
     setEnemyScore(enemyScore ? enemyScore.value : 0);
-    setFlipCardLoading(false);
+
+    if (!winPlayer) {
+      setFlipCardLoading(false);
+    }
   }
 
   function handleExitGame() {
@@ -674,9 +677,7 @@ export default function GameBoard({
             {flipCardLoading && (
               <div className="absolute my-5 top-[-40px] left-1/2 transform -translate-x-1/2 flex items-center gap-2">
                 <div className="w-5 h-5 border-2 border-gray-300 border-t-blue-500 rounded-full animate-spin"></div>
-                <span className="text-sm text-gray-50">
-                  Aguarde, virando carta...
-                </span>
+                <span className="text-sm text-gray-50">Aguarde...</span>
               </div>
             )}
 
