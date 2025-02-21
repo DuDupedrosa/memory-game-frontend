@@ -321,14 +321,14 @@ export default function WaitingRoomComponent({ id }: { id: number | null }) {
               )}
             </div>
 
-            <div>
+            {/* <div>
               <Button
                 onClick={() => setDialogExitRoom(true)}
                 className="w-full transition-all hover:bg-red-600 hover:text-gray-50 mt-5 bg-transparent border border-red-600 text-red-600"
               >
                 {ptJson.exit_room}
               </Button>
-            </div>
+            </div> */}
           </CardContent>
         </Card>
 
