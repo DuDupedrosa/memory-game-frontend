@@ -32,6 +32,7 @@ import Arara from "@/assets/img/board-game-animals/arara-min.png";
 import { LevelEnum, LevelEnumType } from "@/helpers/enum/levelEnum";
 import { getRoomLevelText } from "@/helpers/getRoomLevel";
 import ptJson from "@/helpers/translation/pt.json";
+import PageLoader from "@/components/PageLoader";
 
 const animal_level_1_imgs: CardImage[] = [
   {
@@ -275,7 +276,8 @@ export default function GameBoard({
 
   const [roomData, setRoomData] = useState<RoomDataType | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
-  const [isPlayerTurn, setIsPlayerTurn] = useState<boolean>(false);
+  const [playerAllowedToPlay, setPlayerAllowedToPlay] =
+    useState<boolean>(false);
   const [roundScore, setRoundScore] = useState<number>(0);
   const [enemyScore, setEnemyScore] = useState<number>(0);
   const router = useRouter();
@@ -287,6 +289,7 @@ export default function GameBoard({
   const [images, setImages] = useState<CardImage[] | []>([]);
   const [flipCardLoading, setFlipCardLoading] = useState<boolean>(false);
   const imagesRef = useRef<CardImage[]>([]);
+  const [finishedGame, setFinishedGame] = useState<boolean>(false);
 
   function seededRandom(seed: number) {
     let x = Math.sin(seed++) * 10000;
@@ -305,18 +308,18 @@ export default function GameBoard({
 
   async function handleFlipCard(index: number) {
     try {
+      if (finishedGame) {
+        setFlipCardLoading(false);
+        return;
+      }
+
       if (flipCardLoading) {
         toast.warning(ptJson.loading_card_flip);
         return;
       }
 
-      setFlipCardLoading(true);
-      const { data } = await apiService.get(
-        `room/${roomData?.id}/player-allowed-to-play`
-      );
-
       // se não for o player atual, ele é expectador.
-      if (!data.content.playerIsAllowed) {
+      if (!playerAllowedToPlay) {
         setFlipCardLoading(false);
         return;
       }
@@ -346,7 +349,7 @@ export default function GameBoard({
       const user = getUserLocal();
       if (!user) return;
 
-      setIsPlayerTurn(playerId === user.id);
+      setPlayerAllowedToPlay(playerId === user.id);
       playSound(wrongSound);
       setTimeout(() => {
         const payload = imagesRef.current.map((image) => {
@@ -473,6 +476,7 @@ export default function GameBoard({
     const winPlayer = scores.find((score) => score.value === victoryPoint);
 
     if (winPlayer) {
+      setFinishedGame(true);
       socket.emit("requestGameWin", {
         roomId: id,
         winnerPlayerId: winPlayer.playerId,
@@ -527,7 +531,7 @@ export default function GameBoard({
         const { playerReleasedToPlay } = data.content;
 
         setRoomData(data.content);
-        setIsPlayerTurn(parsedUser.id === playerReleasedToPlay);
+        setPlayerAllowedToPlay(parsedUser.id === playerReleasedToPlay);
       } catch (err) {}
     };
 
@@ -612,6 +616,7 @@ export default function GameBoard({
     correctSound.current.volume = 0.5;
     gameStartSound.current.volume = 0.5;
     setImages([]);
+    setFinishedGame(false);
   }, []);
 
   return (
@@ -650,12 +655,14 @@ export default function GameBoard({
           {/* Mensagem de turno */}
           <div className="mt-4 py-1 md:py-2 px-2 md:px-4 bg-purple-700 text-white rounded-lg shadow-md">
             <span className="block text-lg md:text-2xl font-bold">
-              {isPlayerTurn
+              {playerAllowedToPlay
                 ? ptJson.your_time_to_play
                 : ptJson.wait_your_time_to_play}
             </span>
           </div>
         </div>
+
+        {loading && <PageLoader />}
 
         {!loading && (
           <div className="relative mx-auto w-full px-2 sm:px-5">
