@@ -348,9 +348,8 @@ export default function GameBoard({
     try {
       const user = getUserLocal();
       if (!user) return;
-
-      setPlayerAllowedToPlay(playerId === user.id);
       playSound(wrongSound);
+
       setTimeout(() => {
         const payload = imagesRef.current.map((image) => {
           if (image.isFlipped) image.isFlipped = false;
@@ -360,6 +359,9 @@ export default function GameBoard({
 
         setImages([...payload]);
       }, 500);
+
+      setPlayerAllowedToPlay(playerId === user.id);
+      setFlipCardLoading(false);
     } catch (err) {}
   }
 
@@ -420,9 +422,9 @@ export default function GameBoard({
 
       if (flippedImages && flippedImages.length === 2) {
         triggerFlipCard(flippedImages);
+      } else {
+        setFlipCardLoading(false);
       }
-
-      setFlipCardLoading(false);
     } catch (err) {}
   }
 
@@ -488,6 +490,7 @@ export default function GameBoard({
 
     setRoundScore(roundScore ? roundScore.value : 0);
     setEnemyScore(enemyScore ? enemyScore.value : 0);
+    setFlipCardLoading(false);
   }
 
   function handleExitGame() {
