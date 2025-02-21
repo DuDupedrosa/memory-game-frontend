@@ -674,7 +674,8 @@ export default function GameBoard({
           <div className="relative mx-auto w-full px-2 sm:px-5">
             {/* Spinner centralizado e discreto */}
             {/* isso aqui é temporário em!! */}
-            {flipCardLoading && (
+            {(flipCardLoading ||
+              (!flipCardLoading && !playerAllowedToPlay)) && (
               <div className="absolute my-5 top-[-40px] left-1/2 transform -translate-x-1/2 flex items-center gap-2">
                 <div className="w-5 h-5 border-2 border-gray-300 border-t-blue-500 rounded-full animate-spin"></div>
                 <span className="text-sm text-gray-50">Aguarde...</span>
