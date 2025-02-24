@@ -126,5 +126,6 @@
   "personal_data": "Informações Pessoais",
   "change_password": "Alterar senha",
   "updated_password_success": "Senha alterada com sucesso! Faça login novamente para continuar.",
-  "current_password": "Senha atual"
+  "current_password": "Senha atual",
+  "room_max_limit_users": "A sala já atingiu o número máximo de jogadores."
 }
