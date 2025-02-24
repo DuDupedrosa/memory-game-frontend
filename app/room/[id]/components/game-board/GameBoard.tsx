@@ -722,11 +722,13 @@ export default function GameBoard({
                     } transition-opacity duration-300 ease-in-out`}
                   >
                     <Image
+                      id="image-game-board"
                       className="w-full h-full object-cover rounded-lg"
                       src={image.image}
                       alt="Memory game image"
                       draggable="false"
                       onDragStart={(e) => e.preventDefault()}
+                      onContextMenu={(e) => e.preventDefault()}
                     />
                   </div>
                 </div>
